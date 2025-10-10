@@ -71,6 +71,16 @@ describe('FreedomMetric', () => {
       expect(metric.calculate(whitePawn!, board)).toBe(2)
       expect(metric.calculate(blackPawn!, board)).toBe(2)
     })
+
+
+    it ('should return correct freedom for en passant case', () => {
+      board = new ChessBoard(CHESS_POSITIONS.EN_PASSANT)
+      const pieces = board.getPieces()
+
+      const e5Pawn = pieces.find(p => p.square === 'e5')
+      expect(e5Pawn).toBeDefined()
+      expect(metric.calculate(e5Pawn!, board)).toBe(2)
+    })
   })
 
 })
