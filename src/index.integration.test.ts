@@ -153,7 +153,8 @@ app.get('/api/v1/standard/fen/:fen', (req, res) => {
       fen: board.getFen(),
       gameType: 'standard',
       pieces: result.pieces,
-      players: result.players
+      players: result.players,
+      squares: result.squares
     }
 
     return res.json(response)

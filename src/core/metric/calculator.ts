@@ -1,7 +1,7 @@
 import { ChessBoard } from '../chess/board'
 import { METRIC_REGISTRY, METRIC_METADATA, MetricClass } from './registry'
-import { PlayerMetrics, PieceMetrics } from '../../types/api'
-import { Piece } from '../../types/chess'
+import { PlayerMetrics, PieceMetrics, SquareMetrics } from '../../types/api'
+import { Piece, Square } from '../../types/chess'
 
 export class MetricCalculator {
   private metricInstances: Map<string, MetricClass> = new Map()
@@ -44,6 +44,7 @@ export class MetricCalculator {
   calculate(board: ChessBoard): {
     players: { white: PlayerMetrics; black: PlayerMetrics }
     pieces: PieceMetrics[]
+    squares: SquareMetrics[]
   } {
     // Calculate player metrics dynamically
     const whiteMetrics = this.calculatePlayerMetrics('white', board)
@@ -55,12 +56,16 @@ export class MetricCalculator {
       this.calculatePieceMetrics(piece, board)
     )
 
+    // Calculate square metrics for all 64 squares
+    const squareMetrics: SquareMetrics[] = this.calculateSquareMetrics(board)
+
     return {
       players: {
         white: whiteMetrics,
         black: blackMetrics
       },
-      pieces: pieceMetrics
+      pieces: pieceMetrics,
+      squares: squareMetrics
     }
   }
 
@@ -127,6 +132,56 @@ export class MetricCalculator {
     }
     
     return metrics as PieceMetrics
+  }
+
+  /**
+   * Calculate metrics for all 64 squares
+   */
+  private calculateSquareMetrics(board: ChessBoard): SquareMetrics[] {
+    const allSquares: Square[] = [
+      'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',
+      'a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7',
+      'a6', 'b6', 'c6', 'd6', 'e6', 'f6', 'g6', 'h6',
+      'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5',
+      'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4',
+      'a3', 'b3', 'c3', 'd3', 'e3', 'f3', 'g3', 'h3',
+      'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2',
+      'a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1'
+    ]
+
+    return allSquares.map(square => this.calculateSquareMetricsForSquare(square, board))
+  }
+
+  /**
+   * Calculate metrics for a single square
+   */
+  private calculateSquareMetricsForSquare(square: Square, board: ChessBoard): SquareMetrics {
+    const metrics: any = {
+      square: square
+    }
+
+    // Get all square metrics from registry
+    const squareMetrics = METRIC_REGISTRY.square || []
+
+    for (const MetricClass of squareMetrics) {
+      // Get the metric name from metadata using the class name
+      const className = MetricClass.name
+      const fullName = this.findMetricNameByClassName(className)
+
+      if (fullName) {
+        const instance = this.metricInstances.get(fullName)
+        if (instance) {
+          const result = instance.calculate(square, board)
+          // Extract metric name from full name (e.g., "square.numberOfWhiteAttackers" -> "numberOfWhiteAttackers")
+          const metricName = fullName.split('.')[1]
+          if (metricName) {
+            metrics[metricName] = result
+          }
+        }
+      }
+    }
+
+    return metrics as SquareMetrics
   }
 
 }

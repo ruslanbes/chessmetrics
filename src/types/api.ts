@@ -14,6 +14,7 @@ export interface ChessMetricsResponse {
     white: PlayerMetrics
     black: PlayerMetrics
   }
+  squares: SquareMetrics[]
 }
 
 export interface PlayerMetrics {
@@ -31,6 +32,12 @@ export interface PieceMetrics {
   isHanging: boolean
   numberOfAttackers: number
   freedom: number
+}
+
+export interface SquareMetrics {
+  square: Square
+  numberOfWhiteAttackers: number
+  numberOfBlackAttackers: number
 }
 
 // Error types

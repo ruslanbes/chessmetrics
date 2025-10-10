@@ -17,10 +17,32 @@ describe('MetricCalculator', () => {
       
       expect(result).toHaveProperty('players')
       expect(result).toHaveProperty('pieces')
+      expect(result).toHaveProperty('squares')
       expect(result.players).toHaveProperty('white')
       expect(result.players).toHaveProperty('black')
       expect(result.players.white).toHaveProperty('isMyTurn')
       expect(result.players.black).toHaveProperty('isMyTurn')
+      expect(result.squares).toHaveLength(64)
+    })
+
+    it('should return correct squares structure', () => {
+      board = new ChessBoard(CHESS_POSITIONS.STARTING)
+      const result = calculator.calculate(board)
+      
+      // Check that we have all 64 squares
+      expect(result.squares).toHaveLength(64)
+      
+      // Check that each square has the expected structure
+      const firstSquare = result.squares[0]
+      expect(firstSquare).toHaveProperty('square')
+      expect(firstSquare).toHaveProperty('numberOfWhiteAttackers')
+      expect(firstSquare).toHaveProperty('numberOfBlackAttackers')
+      
+      // Check that square names are valid
+      const squareNames = result.squares.map(s => s.square)
+      expect(squareNames).toContain('a1')
+      expect(squareNames).toContain('h8')
+      expect(squareNames).toContain('e4')
     })
 
     it('should return correct turn values for starting position', () => {
