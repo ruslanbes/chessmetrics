@@ -1,6 +1,6 @@
 import { MetricCalculator } from './calculator'
 import { ChessBoard } from '../chess/board'
-import { CHESS_POSITIONS, EDGE_CASES } from '../../../tests/fixtures/chess-positions'
+import { CHESS_POSITIONS, ENDINGS } from '../../../tests/fixtures/chess-positions'
 
 describe('MetricCalculator', () => {
   let calculator: MetricCalculator
@@ -80,7 +80,7 @@ describe('MetricCalculator', () => {
     })
 
     it('should handle stalemate position', () => {
-      board = new ChessBoard(EDGE_CASES.STALEMATE)
+      board = new ChessBoard(ENDINGS.KINGS_ONLY)
       const result = calculator.calculate(board)
       
       expect(result.players.white.isMyTurn).toBe(true)
@@ -88,7 +88,7 @@ describe('MetricCalculator', () => {
     })
 
     it('should handle kings only position', () => {
-      board = new ChessBoard(EDGE_CASES.KINGS_ONLY)
+      board = new ChessBoard(ENDINGS.KINGS_ONLY)
       const result = calculator.calculate(board)
       
       expect(result.players.white.isMyTurn).toBe(true)

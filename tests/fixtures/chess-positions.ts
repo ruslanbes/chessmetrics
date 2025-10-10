@@ -34,22 +34,10 @@ export const CHESS_POSITIONS = {
 // Endgame positions
 export const ENDINGS = {
   // Rooks and kings endgame (black rook on f4 is pinned)
-  ROOKS_AND_KINGS: '8/8/8/8/2R2rk1/1K6/8/8 b - - 0 1'
-}
-
-// Edge cases for testing
-export const EDGE_CASES = {
-  // Only kings
-  KINGS_ONLY: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
+  ROOKS_AND_KINGS: '8/8/8/8/2R2rk1/1K6/8/8 b - - 0 1',
   
-  // Stalemate position (valid chess position with both kings)
-  STALEMATE: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
-  
-  // Promotion position
-  PROMOTION: '8/8/8/8/8/8/7P/8 w - - 0 1',
-  
-  // Check position
-  CHECK: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 1 2'
+  // Only kings (stalemate position)
+  KINGS_ONLY: '4k3/8/8/8/8/8/8/4K3 w - - 0 1'
 }
 
 // Invalid FENs for error testing

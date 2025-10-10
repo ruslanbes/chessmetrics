@@ -1,6 +1,6 @@
 import { IsMyTurnMetric } from './isMyTurn'
 import { ChessBoard } from '../../../core/chess/board'
-import { CHESS_POSITIONS, EDGE_CASES } from '../../../../tests/fixtures/chess-positions'
+import { CHESS_POSITIONS, ENDINGS } from '../../../../tests/fixtures/chess-positions'
 
 describe('IsMyTurnMetric', () => {
   let metric: IsMyTurnMetric
@@ -44,13 +44,13 @@ describe('IsMyTurnMetric', () => {
     })
 
     it('should handle stalemate position correctly', () => {
-      board = new ChessBoard(EDGE_CASES.STALEMATE)
+      board = new ChessBoard(ENDINGS.KINGS_ONLY)
       const result = metric.calculate(board, { player: 'white', board })
       expect(result).toBe(true) // White to move in stalemate
     })
 
     it('should handle kings only position correctly', () => {
-      board = new ChessBoard(EDGE_CASES.KINGS_ONLY)
+      board = new ChessBoard(ENDINGS.KINGS_ONLY)
       const result = metric.calculate(board, { player: 'white', board })
       expect(result).toBe(true) // White to move with kings only
     })

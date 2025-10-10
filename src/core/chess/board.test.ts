@@ -1,5 +1,5 @@
 import { ChessBoard } from './board'
-import { CHESS_POSITIONS, EDGE_CASES } from '../../../tests/fixtures/chess-positions'
+import { CHESS_POSITIONS, ENDINGS } from '../../../tests/fixtures/chess-positions'
 
 describe('ChessBoard', () => {
   describe('Constructor and validation', () => {
@@ -59,7 +59,7 @@ describe('ChessBoard', () => {
     })
 
     it('should handle edge cases correctly', () => {
-      const board = new ChessBoard(EDGE_CASES.KINGS_ONLY)
+      const board = new ChessBoard(ENDINGS.KINGS_ONLY)
       expect(board.getTurn()).toBe('white')
     })
   })
@@ -83,7 +83,7 @@ describe('ChessBoard', () => {
     })
 
     it('should handle kings only position', () => {
-      const board = new ChessBoard(EDGE_CASES.KINGS_ONLY)
+      const board = new ChessBoard(ENDINGS.KINGS_ONLY)
       const pieces = board.getPieces()
       
       // The kings-only position should have 2 pieces (both kings)
@@ -122,7 +122,7 @@ describe('ChessBoard', () => {
     })
 
     it('should handle stalemate position', () => {
-      const board = new ChessBoard(EDGE_CASES.STALEMATE)
+      const board = new ChessBoard(ENDINGS.KINGS_ONLY)
       // The position should be valid and white to move
       expect(board.getTurn()).toBe('white')
     })
