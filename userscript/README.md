@@ -112,4 +112,6 @@ Any game can be tested as long as the analysis is enabled on the page. For examp
 
 ## License
 
-ISC License - see main project LICENSE file.
+Apache License 2.0 - see main project LICENSE file.
+
+This userscript includes chess.js library, which is licensed under BSD-3-Clause License.
