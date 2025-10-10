@@ -104,7 +104,7 @@ describe('MetricCalculator', () => {
       { fen: CHESS_POSITIONS.AFTER_E4_E5_NF3, expectedWhite: false, expectedBlack: true },
       { fen: CHESS_POSITIONS.EN_PASSANT, expectedWhite: true, expectedBlack: false },
       { fen: CHESS_POSITIONS.CASTLING, expectedWhite: true, expectedBlack: false },
-      { fen: CHESS_POSITIONS.COMPLEX, expectedWhite: true, expectedBlack: false }
+      { fen: CHESS_POSITIONS.GIUOCO_PIANISSIMO, expectedWhite: true, expectedBlack: false }
     ]
 
     testCases.forEach(({ fen, expectedWhite, expectedBlack }, index) => {

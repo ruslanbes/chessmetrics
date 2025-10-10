@@ -25,7 +25,8 @@ export class ChessMetricsAPI {
           fen: board.getFen(),
           gameType: 'standard',
           pieces: result.pieces,
-          players: result.players
+          players: result.players,
+          squares: result.squares
         }
       } catch (error) {
         // Return error response

@@ -13,8 +13,8 @@ describe('ChessBoard', () => {
       expect(board.isValid()).toBe(true)
     })
 
-    it('should validate complex position as valid', () => {
-      const board = new ChessBoard(CHESS_POSITIONS.COMPLEX)
+    it('should validate Giuoco Pianissimo as valid', () => {
+      const board = new ChessBoard(CHESS_POSITIONS.GIUOCO_PIANISSIMO)
       expect(board.isValid()).toBe(true)
     })
 
@@ -36,9 +36,9 @@ describe('ChessBoard', () => {
       expect(board.getFen()).toBe(CHESS_POSITIONS.STARTING)
     })
 
-    it('should return correct FEN for complex position', () => {
-      const board = new ChessBoard(CHESS_POSITIONS.COMPLEX)
-      expect(board.getFen()).toBe(CHESS_POSITIONS.COMPLEX)
+    it('should return correct FEN for Giuoco Pianissimo', () => {
+      const board = new ChessBoard(CHESS_POSITIONS.GIUOCO_PIANISSIMO)
+      expect(board.getFen()).toBe(CHESS_POSITIONS.GIUOCO_PIANISSIMO)
     })
   })
 
@@ -74,8 +74,8 @@ describe('ChessBoard', () => {
       expect(pieces.filter(p => p.color === 'black')).toHaveLength(16)
     })
 
-    it('should return correct pieces for complex position', () => {
-      const board = new ChessBoard(CHESS_POSITIONS.COMPLEX)
+    it('should return correct pieces for Giuoco Pianissimo', () => {
+      const board = new ChessBoard(CHESS_POSITIONS.GIUOCO_PIANISSIMO)
       const pieces = board.getPieces()
       
       expect(pieces.length).toBeGreaterThan(0)

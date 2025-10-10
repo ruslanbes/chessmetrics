@@ -12,9 +12,18 @@ export class NumberOfBlackAttackersMetric {
   max = 8 // Reasonable estimate for maximum black attackers in a real position
   dependencies: string[] = []
 
-  calculate(_square: Square, _board: ChessBoard): number {
-    // For now, return 0 - we'll implement this properly later
-    // This would require checking which black pieces can attack this square
-    return 0
+  calculate(square: Square, board: ChessBoard): number {
+    // Get all black pieces and check if they can attack the target square
+    const pieces = board.getPieces()
+    const blackPieces = pieces.filter(piece => piece.color === 'black')
+    
+    let attackCount = 0
+    for (const piece of blackPieces) {
+      if (board.canAttack(piece.square, square, 'black')) {
+        attackCount++
+      }
+    }
+    
+    return attackCount
   }
 }

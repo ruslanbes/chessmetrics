@@ -12,9 +12,18 @@ export class NumberOfWhiteAttackersMetric {
   max = 8 // Reasonable estimate for maximum white attackers in a real position
   dependencies: string[] = []
 
-  calculate(_square: Square, _board: ChessBoard): number {
-    // For now, return 0 - we'll implement this properly later
-    // This would require checking which white pieces can attack this square
-    return 0
+  calculate(square: Square, board: ChessBoard): number {
+    // Get all white pieces and check if they can attack the target square
+    const pieces = board.getPieces()
+    const whitePieces = pieces.filter(piece => piece.color === 'white')
+    
+    let attackCount = 0
+    for (const piece of whitePieces) {
+      if (board.canAttack(piece.square, square, 'white')) {
+        attackCount++
+      }
+    }
+    
+    return attackCount
   }
 }

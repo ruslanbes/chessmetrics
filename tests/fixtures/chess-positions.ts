@@ -15,9 +15,6 @@ export const CHESS_POSITIONS = {
   // Checkmate position (Fool's Mate)
   FOOLS_MATE: 'rnb1kbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3',
   
-  // Stalemate position
-  STALEMATE: '8/8/8/8/8/8/8/4K3 w - - 0 1',
-  
   // En passant position
   EN_PASSANT: 'rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3',
   
@@ -25,7 +22,10 @@ export const CHESS_POSITIONS = {
   CASTLING: 'r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1',
   
   // Complex position
-  COMPLEX: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 4 4'
+  GIUOCO_PIANISSIMO: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 4 4',
+  
+  // Queen's Gambit opening (after 1.c4)
+  QUEENS_GAMBIT: 'rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2'
 }
 
 // Edge cases for testing
