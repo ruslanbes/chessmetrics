@@ -7,6 +7,7 @@ export interface PieceMetricContext {
 }
 
 export class IsAttackedMetric {
+  description = "isAttacked tells if this piece is under attack by enemy pieces"
   dependencies: string[] = []
 
   calculate(_piece: Piece, _board: ChessBoard): boolean {

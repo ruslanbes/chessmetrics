@@ -7,11 +7,16 @@ export interface PieceMetricContext {
 }
 
 export class FreedomMetric {
+  description = "freedom tells how many legal moves this piece can make"
   dependencies: string[] = []
 
-  calculate(_piece: Piece, _board: ChessBoard): number {
-    // For now, return 0 - we'll implement this properly later
-    // This would require getting all possible moves for this piece
-    return 0
+  calculate(piece: Piece, board: ChessBoard): number {
+    // Get all legal moves for the current position
+    const allMoves = board.getMoves()
+    
+    // Filter moves that start from this piece's square
+    const pieceMoves = allMoves.filter(move => move.from === piece.square)
+    
+    return pieceMoves.length
   }
 }

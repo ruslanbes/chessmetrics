@@ -7,6 +7,7 @@ export interface PieceMetricContext {
 }
 
 export class IsHangingMetric {
+  description = "isHanging tells if this piece is hanging (attacked but not defended)"
   dependencies: string[] = ['piece.isAttacked', 'piece.isDefended']
 
   calculate(_piece: Piece, _board: ChessBoard): boolean {

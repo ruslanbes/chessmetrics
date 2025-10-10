@@ -15,6 +15,7 @@
     "build:userscript": "node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
     "dev:userscript": "webpack --config userscript/build/webpack.config.js --watch",
     "test": "jest",
+    "test:browser": "open userscript/test.html",
     "test:unit": "jest --testPathIgnorePatterns=integration",
     "test:integration": "jest --testPathPatterns=integration",
     "test:watch": "jest --watch",

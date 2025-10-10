@@ -7,6 +7,7 @@ export interface PieceMetricContext {
 }
 
 export class NumberOfAttackersMetric {
+  description = "numberOfAttackers tells how many enemy pieces are attacking this piece"
   dependencies: string[] = []
 
   calculate(_piece: Piece, _board: ChessBoard): number {
