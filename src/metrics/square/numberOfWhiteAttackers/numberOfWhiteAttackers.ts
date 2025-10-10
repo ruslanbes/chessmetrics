@@ -10,7 +10,6 @@ export class NumberOfWhiteAttackersMetric {
   description = "numberOfWhiteAttackers tells how many white pieces attack this square"
   min = 0
   max = 8 // Reasonable estimate for maximum white attackers in a real position
-  dependencies: string[] = []
 
   calculate(square: Square, board: ChessBoard): number {
     // Get all white pieces and check if they can attack the target square

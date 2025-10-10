@@ -193,7 +193,6 @@ function generateRegistryFile(metricsByCategory: Record<string, MetricInfo[]>, o
     'export type MetricCategory = keyof typeof METRIC_REGISTRY',
     '',
     'export type MetricClass = {',
-    '  dependencies: string[]',
     '  calculate: (...args: any[]) => any',
     '}',
     '',

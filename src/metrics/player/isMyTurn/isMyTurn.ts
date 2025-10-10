@@ -8,7 +8,6 @@ export interface MetricContext {
 
 export class IsMyTurnMetric {
   description = "isMyTurn tells if it's currently this player's turn"
-  dependencies: string[] = []
 
   calculate(board: ChessBoard, context: MetricContext): boolean {
     const currentTurn = board.getTurn()

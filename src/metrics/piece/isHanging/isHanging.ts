@@ -10,7 +10,6 @@ export interface PieceMetricContext {
 
 export class IsHangingMetric {
   description = "isHanging tells if this piece is hanging (attacked but not defended)"
-  dependencies: string[] = []
 
   private blackAttackersMetric = new NumberOfBlackAttackersMetric()
   private whiteAttackersMetric = new NumberOfWhiteAttackersMetric()

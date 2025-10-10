@@ -10,7 +10,6 @@ export class PlayerFreedomMetric {
   description = "freedom tells the sum of freedoms of all pieces for this player"
   min = 0
   max = 100 // Reasonable estimate for maximum freedom in a real position
-  dependencies: string[] = []
 
   calculate(board: ChessBoard, context: PlayerMetricContext): number {
     const player = context.player

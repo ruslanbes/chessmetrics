@@ -3,6 +3,7 @@
 
 import { NumberOfWhiteAttackersMetric } from '../../metrics/square/numberOfWhiteAttackers/numberOfWhiteAttackers'
 import { NumberOfBlackAttackersMetric } from '../../metrics/square/numberOfBlackAttackers/numberOfBlackAttackers'
+import { QueensFreedomMetric } from '../../metrics/player/queensFreedom/queensFreedom'
 import { KingsFreedomMetric } from '../../metrics/player/kingsFreedom/kingsFreedom'
 import { IsMyTurnMetric } from '../../metrics/player/isMyTurn/isMyTurn'
 import { PlayerFreedomMetric } from '../../metrics/player/freedom/freedom'
@@ -11,7 +12,7 @@ import { FreedomMetric } from '../../metrics/piece/freedom/freedom'
 
 export const METRIC_REGISTRY = {
   square: [NumberOfWhiteAttackersMetric, NumberOfBlackAttackersMetric],
-  player: [KingsFreedomMetric, IsMyTurnMetric, PlayerFreedomMetric],
+  player: [QueensFreedomMetric, KingsFreedomMetric, IsMyTurnMetric, PlayerFreedomMetric],
   piece: [IsHangingMetric, FreedomMetric],
 } as const
 
@@ -31,6 +32,12 @@ export const METRIC_METADATA = {
     },
   },
   player: {
+    'player.queensFreedom': {
+      name: 'player.queensFreedom',
+      type: 'number',
+      category: 'player',
+      className: 'QueensFreedomMetric'
+    },
     'player.kingsFreedom': {
       name: 'player.kingsFreedom',
       type: 'number',
@@ -69,7 +76,6 @@ export const METRIC_METADATA = {
 export type MetricCategory = keyof typeof METRIC_REGISTRY
 
 export type MetricClass = {
-  dependencies: string[]
   calculate: (...args: any[]) => any
 }
 

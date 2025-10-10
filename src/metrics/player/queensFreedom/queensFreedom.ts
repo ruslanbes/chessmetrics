@@ -7,10 +7,10 @@ export interface PlayerMetricContext {
   board: ChessBoard
 }
 
-export class KingsFreedomMetric {
-  description = "kingsFreedom tells the freedom of this player's king piece"
+export class QueensFreedomMetric {
+  description = "queensFreedom tells the sum of freedoms of all queen pieces for this player"
   min = 0
-  max = 8 // Maximum theoretical moves for a king (8 squares around it)
+  max = 27 // Maximum freedom for a queen on an empty board
 
   private pieceFreedomMetric = new FreedomMetric()
 
@@ -19,14 +19,14 @@ export class KingsFreedomMetric {
     
     // Get all pieces belonging to this player
     const pieces = board.getPieces()
-    const playerKing = pieces.find(piece => piece.color === player && piece.type === 'king')
+    const playerQueens = pieces.filter(piece => piece.color === player && piece.type === 'queen')
     
-    if (!playerKing) {
-      // If no king found, return 0 (shouldn't happen in valid chess positions)
-      return 0
+    // Sum up the freedom of all queen pieces
+    let totalFreedom = 0
+    for (const queen of playerQueens) {
+      totalFreedom += this.pieceFreedomMetric.calculate(queen, board)
     }
     
-    // Calculate the freedom of the king
-    return this.pieceFreedomMetric.calculate(playerKing, board)
+    return totalFreedom
   }
 }
