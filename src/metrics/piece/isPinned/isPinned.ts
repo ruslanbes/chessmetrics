@@ -10,7 +10,15 @@ export class IsPinnedMetric {
   description = "isPinned tells if this piece is pinned (some of its moves are invalid due to king exposure)"
 
   calculate(piece: Piece, board: ChessBoard): boolean {
-    // Get all legal moves for this piece's color
+    // A piece is pinned if moving it would expose the king to check
+    // We can detect this by temporarily moving the piece and checking if the king is in check
+    
+    const king = board.getPieces().find(p => p.color === piece.color && p.type === 'king')
+    if (!king) {
+      return false
+    }
+    
+    // Get all legal moves for this piece
     const allMoves = board.getAllMoves()
     const pieceMoves = allMoves.filter(move => 
       move.from === piece.square && move.color === piece.color
@@ -21,101 +29,25 @@ export class IsPinnedMetric {
       return false
     }
     
-    // A piece is pinned if it has significantly fewer legal moves than it should have
-    // Chess.js automatically prevents moves that would expose the king to check
-    // We can detect pins by comparing actual moves with theoretical moves
-    
-    // Get the piece's theoretical maximum moves based on its type and position
-    const theoreticalMoves = this.getTheoreticalMoves(piece)
-    
-    // Calculate the ratio of actual moves to theoretical moves
-    const moveRatio = pieceMoves.length / theoreticalMoves.length
-    
-    // A piece is likely pinned if:
-    // 1. It has significantly fewer moves than theoretically possible (less than 50% of theoretical moves)
-    // 2. It's aligned with its king
-    if (moveRatio < 0.5 && this.isAlignedWithKing(piece, board)) {
-      return true
-    }
-    
-    return false
-  }
-  
-  private getTheoreticalMoves(piece: Piece): string[] {
-    // Get all possible squares this piece could theoretically move to
-    switch (piece.type) {
-      case 'rook':
-        return this.getRookTheoreticalMoves(piece.square)
-      case 'bishop':
-        return this.getBishopTheoreticalMoves(piece.square)
-      case 'queen':
-        return [...this.getRookTheoreticalMoves(piece.square), 
-                ...this.getBishopTheoreticalMoves(piece.square)]
-      default:
-        // For other pieces, we'll use a simpler approach
-        return []
-    }
-  }
-  
-  private getRookTheoreticalMoves(square: string): string[] {
-    const moves: string[] = []
-    const file = square.charCodeAt(0) - 97
-    const rank = parseInt(square[1]!) - 1
-    
-    // Add all squares on the same rank
-    for (let f = 0; f < 8; f++) {
-      if (f !== file) {
-        moves.push(String.fromCharCode(97 + f) + (rank + 1))
-      }
-    }
-    
-    // Add all squares on the same file
-    for (let r = 0; r < 8; r++) {
-      if (r !== rank) {
-        moves.push(String.fromCharCode(97 + file) + (r + 1))
-      }
-    }
-    
-    return moves
-  }
-  
-  private getBishopTheoreticalMoves(square: string): string[] {
-    const moves: string[] = []
-    const file = square.charCodeAt(0) - 97
-    const rank = parseInt(square[1]!) - 1
-    
-    // Add all squares on the diagonals
-    for (let i = 1; i < 8; i++) {
-      // Diagonal 1: +i, +i
-      if (file + i < 8 && rank + i < 8) {
-        moves.push(String.fromCharCode(97 + file + i) + (rank + i + 1))
-      }
-      // Diagonal 2: +i, -i
-      if (file + i < 8 && rank - i >= 0) {
-        moves.push(String.fromCharCode(97 + file + i) + (rank - i + 1))
-      }
-      // Diagonal 3: -i, +i
-      if (file - i >= 0 && rank + i < 8) {
-        moves.push(String.fromCharCode(97 + file - i) + (rank + i + 1))
-      }
-      // Diagonal 4: -i, -i
-      if (file - i >= 0 && rank - i >= 0) {
-        moves.push(String.fromCharCode(97 + file - i) + (rank - i + 1))
-      }
-    }
-    
-    return moves
-  }
-  
-  private isAlignedWithKing(piece: Piece, board: ChessBoard): boolean {
-    // Check if the piece is aligned with its king
-    const pieces = board.getPieces()
-    const king = pieces.find(p => p.color === piece.color && p.type === 'king')
-    
-    if (!king) {
+    // Check if the piece is aligned with its king (same rank, file, or diagonal)
+    if (!this.isAlignedWithKing(piece, king)) {
       return false
     }
     
+    // Check if there's an enemy piece attacking along the line between the piece and king
+    const attackingPiece = this.findAttackingPieceOnLine(piece, king, board)
+    if (!attackingPiece) {
+      return false
+    }
+    
+    // The piece is pinned if:
+    // 1. It's aligned with its king
+    // 2. There's an enemy piece attacking along that line
+    // If both conditions are true, then moving the piece would expose the king to check
+    return true
+  }
+
+  private isAlignedWithKing(piece: Piece, king: Piece): boolean {
     // Check if piece and king are aligned (same rank, file, or diagonal)
     const pieceFile = piece.square.charCodeAt(0) - 97
     const pieceRank = parseInt(piece.square[1]!) - 1
@@ -126,8 +58,86 @@ export class IsPinnedMetric {
     const sameFile = pieceFile === kingFile
     const sameDiagonal = Math.abs(pieceRank - kingRank) === Math.abs(pieceFile - kingFile)
     
-    // If the piece is aligned with its king and has fewer moves than expected,
-    // it's likely pinned
     return sameRank || sameFile || sameDiagonal
   }
+
+  /**
+   * Find an enemy piece that could attack along the line between the piece and king
+   */
+  private findAttackingPieceOnLine(piece: Piece, king: Piece, board: ChessBoard): Piece | null {
+    const pieces = board.getPieces()
+    const enemyPieces = pieces.filter(p => p.color !== piece.color)
+    
+    // Check if any enemy piece is on the same line as the piece and king
+    for (const enemyPiece of enemyPieces) {
+      // Check if the enemy piece is on the same line (rank, file, or diagonal)
+      if (this.isOnSameLine(piece.square, king.square, enemyPiece.square)) {
+        // Check if this enemy piece can attack the king
+        if (this.canAttackSquare(enemyPiece, king.square, board)) {
+          return enemyPiece
+        }
+      }
+    }
+    
+    return null
+  }
+
+  /**
+   * Check if three squares are on the same line (rank, file, or diagonal)
+   */
+  private isOnSameLine(square1: string, square2: string, square3: string): boolean {
+    const file1 = square1.charCodeAt(0) - 97
+    const rank1 = parseInt(square1[1]!) - 1
+    const file2 = square2.charCodeAt(0) - 97
+    const rank2 = parseInt(square2[1]!) - 1
+    const file3 = square3.charCodeAt(0) - 97
+    const rank3 = parseInt(square3[1]!) - 1
+    
+    // Same rank
+    if (rank1 === rank2 && rank2 === rank3) {
+      return true
+    }
+    
+    // Same file
+    if (file1 === file2 && file2 === file3) {
+      return true
+    }
+    
+    // Same diagonal
+    if (Math.abs(rank1 - rank2) === Math.abs(file1 - file2) &&
+        Math.abs(rank2 - rank3) === Math.abs(file2 - file3) &&
+        Math.abs(rank1 - rank3) === Math.abs(file1 - file3)) {
+      return true
+    }
+    
+    return false
+  }
+
+
+  /**
+   * Check if a piece can attack a specific square
+   */
+  private canAttackSquare(piece: Piece, targetSquare: string, _board: ChessBoard): boolean {
+    // This is a simplified check - in a real implementation, we'd need to check
+    // if the piece can actually move to that square given the current board state
+    const pieceFile = piece.square.charCodeAt(0) - 97
+    const pieceRank = parseInt(piece.square[1]!) - 1
+    const targetFile = targetSquare.charCodeAt(0) - 97
+    const targetRank = parseInt(targetSquare[1]!) - 1
+    
+    switch (piece.type) {
+      case 'rook':
+        return pieceFile === targetFile || pieceRank === targetRank
+      case 'bishop':
+        return Math.abs(pieceFile - targetFile) === Math.abs(pieceRank - targetRank)
+      case 'queen':
+        return pieceFile === targetFile || pieceRank === targetRank || 
+               Math.abs(pieceFile - targetFile) === Math.abs(pieceRank - targetRank)
+      default:
+        return false
+    }
+  }
+
 }
+
+

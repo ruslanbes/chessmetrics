@@ -1,6 +1,6 @@
 import { IsPinnedMetric } from './isPinned'
 import { ChessBoard } from '../../../core/chess/board'
-import { CHESS_POSITIONS, ENDINGS } from '../../../../tests/fixtures/chess-positions'
+import { CHESS_POSITIONS, ENDINGS, MIDDLEGAMES } from '../../../../tests/fixtures/chess-positions'
 
 describe('IsPinnedMetric', () => {
   let metric: IsPinnedMetric
@@ -31,6 +31,23 @@ describe('IsPinnedMetric', () => {
       expect(metric.calculate(blackPawn!, board)).toBe(false)
       expect(metric.calculate(whiteRook!, board)).toBe(false)
       expect(metric.calculate(blackRook!, board)).toBe(false)
+    })
+
+    it('should correctly identify that black rooks are not pinned in MIDDLEGAME_1 position', () => {
+      board = new ChessBoard(MIDDLEGAMES.MIDDLEGAME_1)
+      const pieces = board.getPieces()
+      
+      // Find the black rooks on c8 and f8
+      const blackRookC8 = pieces.find(p => p.color === 'black' && p.type === 'rook' && p.square === 'c8')
+      const blackRookF8 = pieces.find(p => p.color === 'black' && p.type === 'rook' && p.square === 'f8')
+      
+      expect(blackRookC8).toBeDefined()
+      expect(blackRookF8).toBeDefined()
+      
+      // These rooks should NOT be pinned - they are on the same rank as the king
+      // but there's no enemy piece attacking along the line between them and the king
+      expect(metric.calculate(blackRookC8!, board)).toBe(false)
+      expect(metric.calculate(blackRookF8!, board)).toBe(false)
     })
 
     it('should work for the position where the pieces stare at each other', () => {
