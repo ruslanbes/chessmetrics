@@ -7,7 +7,7 @@
 // @match        https://www.chess.com/*
 // @match        https://lichess.org/*
 // @grant        none
-// @require      https://unpkg.com/chess.js@1.4.0/chess.min.js
+// chess.js is now bundled directly - no external dependency needed
 // ==/UserScript==
 
 import { ChessMetricsAPI } from './api'

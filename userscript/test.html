@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chessmetrics Userscript Test</title>
+    <!-- chess.js is now bundled directly in the userscript -->
+</head>
+<body>
+    <h1>Chessmetrics Userscript Test</h1>
+    <div id="output"></div>
+    
+    <script src="dist/chessmetrics.user.js"></script>
+    <script>
+        const output = document.getElementById('output');
+        
+        function testFen(fen, description) {
+            try {
+                const result = window.chessmetrics.standard.fen(fen);
+                output.innerHTML += `
+                    <h3>${description}</h3>
+                    <p><strong>FEN:</strong> ${fen}</p>
+                    <p><strong>Result:</strong></p>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                    <hr>
+                `;
+            } catch (error) {
+                output.innerHTML += `
+                    <h3>${description} - ERROR</h3>
+                    <p><strong>FEN:</strong> ${fen}</p>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <hr>
+                `;
+            }
+        }
+        
+        // Test cases
+        testFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'Starting Position');
+        testFen('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1', 'After 1.e4');
+        testFen('invalid-fen', 'Invalid FEN');
+    </script>
+</body>
+</html>

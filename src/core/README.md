@@ -2,7 +2,6 @@
 
 This directory contains the core chess functionality, utilities, and shared logic used throughout the application.
 
-
 ## Core Components
 
 ### Chess Integration
@@ -25,20 +24,6 @@ Orchestrates metric calculations with auto-discovery and dependency management. 
 
 ### Auto-Generated Registry
 The metric registry is automatically generated at build time, containing all discovered metrics and their metadata for runtime execution.
-
-## Chess Analysis
-
-### Basic Analysis
-- **Piece Positions**: Get all pieces and their positions
-- **Legal Moves**: Generate all legal moves for a position
-- **Turn Detection**: Determine whose turn it is
-- **Position Validation**: Check if position is valid
-
-### Metrics Analysis
-- **Player Metrics**: Calculate player-specific metrics
-- **Piece Metrics**: Calculate piece-specific metrics
-- **Auto-Discovery**: Metrics are automatically discovered and registered
-- **Dependency Management**: Metrics can depend on other metrics
 
 ## Build Process
 
