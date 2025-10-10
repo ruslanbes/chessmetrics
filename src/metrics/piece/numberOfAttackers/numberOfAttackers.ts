@@ -8,6 +8,8 @@ export interface PieceMetricContext {
 
 export class NumberOfAttackersMetric {
   description = "numberOfAttackers tells how many enemy pieces are attacking this piece"
+  min = 0
+  max = 8 // Reasonable estimate for maximum attackers in a real position
   dependencies: string[] = []
 
   calculate(_piece: Piece, _board: ChessBoard): number {

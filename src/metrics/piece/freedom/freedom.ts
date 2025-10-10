@@ -8,6 +8,8 @@ export interface PieceMetricContext {
 
 export class FreedomMetric {
   description = "freedom tells how many legal moves this piece can make"
+  min = 0
+  max = 27 // Maximum theoretical moves for a queen on an empty board
   dependencies: string[] = []
 
   calculate(piece: Piece, board: ChessBoard): number {
