@@ -1,5 +1,5 @@
 import { ChessBoard } from '../../../core/chess/board'
-import { Piece } from '../../../types/chess'
+import { Piece, SquareUtils } from '../../../types/chess'
 
 export interface PieceMetricContext {
   piece: Piece
@@ -48,14 +48,9 @@ export class IsPinnedMetric {
 
   private isAlignedWithKing(piece: Piece, king: Piece): boolean {
     // Check if piece and king are aligned (same rank, file, or diagonal)
-    const pieceFile = piece.square.charCodeAt(0) - 97
-    const pieceRank = parseInt(piece.square[1]!) - 1
-    const kingFile = king.square.charCodeAt(0) - 97
-    const kingRank = parseInt(king.square[1]!) - 1
-    
-    const sameRank = pieceRank === kingRank
-    const sameFile = pieceFile === kingFile
-    const sameDiagonal = Math.abs(pieceRank - kingRank) === Math.abs(pieceFile - kingFile)
+    const sameRank = piece.rank === king.rank
+    const sameFile = piece.file === king.file
+    const sameDiagonal = Math.abs(piece.rank - king.rank) === Math.abs(piece.file - king.file)
     
     return sameRank || sameFile || sameDiagonal
   }
@@ -124,19 +119,18 @@ export class IsPinnedMetric {
   private canAttackSquare(piece: Piece, targetSquare: string, _board: ChessBoard): boolean {
     // This is a simplified check - in a real implementation, we'd need to check
     // if the piece can actually move to that square given the current board state
-    const pieceFile = piece.square.charCodeAt(0) - 97
-    const pieceRank = parseInt(piece.square[1]!) - 1
-    const targetFile = targetSquare.charCodeAt(0) - 97
-    const targetRank = parseInt(targetSquare[1]!) - 1
+    const targetCoords = SquareUtils.toCoordinates(targetSquare as any)
+    const fileDiff = Math.abs(targetCoords.file - piece.file)
+    const rankDiff = Math.abs(targetCoords.rank - piece.rank)
     
     switch (piece.type) {
       case 'rook':
-        return pieceFile === targetFile || pieceRank === targetRank
+        return piece.file === targetCoords.file || piece.rank === targetCoords.rank
       case 'bishop':
-        return Math.abs(pieceFile - targetFile) === Math.abs(pieceRank - targetRank)
+        return fileDiff === rankDiff
       case 'queen':
-        return pieceFile === targetFile || pieceRank === targetRank || 
-               Math.abs(pieceFile - targetFile) === Math.abs(pieceRank - targetRank)
+        return piece.file === targetCoords.file || piece.rank === targetCoords.rank || 
+               fileDiff === rankDiff
       default:
         return false
     }

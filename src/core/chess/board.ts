@@ -1,5 +1,5 @@
 import { Chess } from 'chess.js'
-import { Color, Piece, Move, PieceType, Square } from '../../types/chess'
+import { Color, Piece, Move, PieceType, Square, SquareUtils } from '../../types/chess'
 
 export class ChessBoard {
   private chess: Chess
@@ -33,10 +33,14 @@ export class ChessBoard {
       for (let file = 0; file < 8; file++) {
         const square = board[rank]?.[file]
         if (square) {
+          const squareName = this.getSquareName(rank, file)
+          const coordinates = SquareUtils.toCoordinates(squareName)
           pieces.push({
             type: this.mapPieceType(square.type),
             color: square.color === 'w' ? 'white' : 'black',
-            square: this.getSquareName(rank, file)
+            square: squareName,
+            file: coordinates.file,
+            rank: coordinates.rank
           })
         }
       }
@@ -129,13 +133,11 @@ export class ChessBoard {
    * Basic attack detection for common piece patterns
    */
   private basicAttackDetection(fromSquare: Square, toSquare: Square, attackingColor: Color): boolean {
-    const fromFile = fromSquare.charCodeAt(0) - 97 // a=0, b=1, etc.
-    const fromRank = parseInt(fromSquare[1]!) - 1 // 1=0, 2=1, etc.
-    const toFile = toSquare.charCodeAt(0) - 97
-    const toRank = parseInt(toSquare[1]!) - 1
+    const fromCoords = SquareUtils.toCoordinates(fromSquare)
+    const toCoords = SquareUtils.toCoordinates(toSquare)
 
-    const fileDiff = Math.abs(toFile - fromFile)
-    const rankDiff = Math.abs(toRank - fromRank)
+    const fileDiff = Math.abs(toCoords.file - fromCoords.file)
+    const rankDiff = Math.abs(toCoords.rank - fromCoords.rank)
 
     // Get the piece on the from square
     const piece = this.chess.get(fromSquare)
@@ -149,7 +151,7 @@ export class ChessBoard {
     switch (piece.type) {
       case 'p': // Pawn
         const direction = attackingColor === 'white' ? 1 : -1
-        return fileDiff === 1 && (toRank - fromRank) === direction
+        return fileDiff === 1 && (toCoords.rank - fromCoords.rank) === direction
       
       case 'r': // Rook
         return (fileDiff === 0 && rankDiff > 0) || (rankDiff === 0 && fileDiff > 0)
@@ -225,68 +227,14 @@ export class ChessBoard {
    * Get all squares on a line between two squares (useful for pin detection)
    */
   getSquaresBetween(fromSquare: Square, toSquare: Square): Square[] {
-    const fromFile = fromSquare.charCodeAt(0) - 97
-    const fromRank = 8 - parseInt(fromSquare[1]!)
-    const toFile = toSquare.charCodeAt(0) - 97
-    const toRank = 8 - parseInt(toSquare[1]!)
-    
-    const squares: Square[] = []
-    
-    // Determine the direction
-    const fileStep = toFile > fromFile ? 1 : toFile < fromFile ? -1 : 0
-    const rankStep = toRank > fromRank ? 1 : toRank < fromRank ? -1 : 0
-    
-    // Check if squares are aligned (same rank, file, or diagonal)
-    const isAligned = fileStep === 0 || rankStep === 0 || Math.abs(fileStep) === Math.abs(rankStep)
-    if (!isAligned) {
-      return squares // Not aligned, no squares between
-    }
-    
-    // Get squares between (excluding endpoints)
-    let file = fromFile + fileStep
-    let rank = fromRank + rankStep
-    
-    while (file !== toFile || rank !== toRank) {
-      if (file >= 0 && file < 8 && rank >= 0 && rank < 8) {
-        const square = String.fromCharCode(97 + file) + (8 - rank) as Square
-        squares.push(square)
-      }
-      file += fileStep
-      rank += rankStep
-    }
-    
-    return squares
+    return SquareUtils.getSquaresBetween(fromSquare, toSquare)
   }
 
   /**
    * Check if three squares are on the same line (rank, file, or diagonal)
    */
   areOnSameLine(square1: Square, square2: Square, square3: Square): boolean {
-    const file1 = square1.charCodeAt(0) - 97
-    const rank1 = 8 - parseInt(square1[1]!)
-    const file2 = square2.charCodeAt(0) - 97
-    const rank2 = 8 - parseInt(square2[1]!)
-    const file3 = square3.charCodeAt(0) - 97
-    const rank3 = 8 - parseInt(square3[1]!)
-    
-    // Same rank
-    if (rank1 === rank2 && rank2 === rank3) {
-      return true
-    }
-    
-    // Same file
-    if (file1 === file2 && file2 === file3) {
-      return true
-    }
-    
-    // Same diagonal
-    if (Math.abs(rank1 - rank2) === Math.abs(file1 - file2) &&
-        Math.abs(rank2 - rank3) === Math.abs(file2 - file3) &&
-        Math.abs(rank1 - rank3) === Math.abs(file1 - file3)) {
-      return true
-    }
-    
-    return false
+    return SquareUtils.areOnSameLine(square1, square2, square3)
   }
 
   /**
@@ -296,10 +244,13 @@ export class ChessBoard {
     const piece = this.chess.get(square)
     if (!piece) return null
     
+    const coordinates = SquareUtils.toCoordinates(square)
     return {
       type: this.mapPieceType(piece.type),
       color: piece.color === 'w' ? 'white' : 'black',
-      square: square
+      square: square,
+      file: coordinates.file,
+      rank: coordinates.rank
     }
   }
 
@@ -315,10 +266,9 @@ export class ChessBoard {
     // Simple highlighting by adding markers
     let result = ascii
     highlightSquares.forEach(square => {
-      const file = square.charCodeAt(0) - 97
-      const rank = 8 - parseInt(square[1]!)
-      const asciiRank = 8 - rank + 1 // Convert to ASCII line number
-      const asciiFile = file * 3 + 2 // Convert to ASCII column position
+      const coordinates = SquareUtils.toCoordinates(square)
+      const asciiRank = 8 - coordinates.rank + 1 // Convert to ASCII line number
+      const asciiFile = coordinates.file * 3 + 2 // Convert to ASCII column position
       
       // This is a simplified approach - in practice you might want more sophisticated highlighting
       result += `\nHighlighted: ${square} at line ${asciiRank}, col ${asciiFile}`
