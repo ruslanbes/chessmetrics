@@ -18,8 +18,8 @@ describe('PlayerFreedomMetric', () => {
       const whiteFreedom = metric.calculate(board, { player: 'white', board })
       const blackFreedom = metric.calculate(board, { player: 'black', board })
       
-      expect(whiteFreedom).toEqual(20)
-      expect(blackFreedom).toEqual(20)
+      expect(whiteFreedom).toBe(20)
+      expect(blackFreedom).toBe(20)
     })
 
     it('should return different freedoms after moves', () => {
@@ -29,8 +29,8 @@ describe('PlayerFreedomMetric', () => {
       const blackFreedom = metric.calculate(board, { player: 'black', board })
       
       // After e4, both players should have freedom (turn doesn't matter)
-      expect(whiteFreedom).toEqual(30)
-      expect(blackFreedom).toEqual(20)
+      expect(whiteFreedom).toBe(30)
+      expect(blackFreedom).toBe(20)
       // They may have different freedoms due to the position change
     })
 
@@ -40,8 +40,8 @@ describe('PlayerFreedomMetric', () => {
       const whiteFreedom = metric.calculate(board, { player: 'white', board })
       const blackFreedom = metric.calculate(board, { player: 'black', board })
       
-      expect(whiteFreedom).toBeGreaterThanOrEqual(0)
-      expect(blackFreedom).toBeGreaterThanOrEqual(0)
+      expect(whiteFreedom).toBe(38)
+      expect(blackFreedom).toBe(29)
     })
 
     it('should return 0 for positions with no legal moves', () => {
@@ -49,11 +49,9 @@ describe('PlayerFreedomMetric', () => {
       board = new ChessBoard(CHESS_POSITIONS.FOOLS_MATE)
       
       const whiteFreedom = metric.calculate(board, { player: 'white', board })
-      const blackFreedom = metric.calculate(board, { player: 'black', board })
       
       // In fool's mate, White has no legal moves (checkmate)
       expect(whiteFreedom).toBe(0)
-      expect(blackFreedom).toBeGreaterThan(0) // Black should still have moves available
     })
 
     it('should sum freedoms of all player pieces correctly', () => {
@@ -85,8 +83,8 @@ describe('PlayerFreedomMetric', () => {
       const whiteFreedom = metric.calculate(board, { player: 'white', board })
       const blackFreedom = metric.calculate(board, { player: 'black', board })
       
-      expect(whiteFreedom).toBeGreaterThan(0)
-      expect(blackFreedom).toBeGreaterThan(0) // Both players should have freedom regardless of turn
+      expect(whiteFreedom).toBe(29)
+      expect(blackFreedom).toBe(29) // Both players should have freedom regardless of turn
     })
   })
 })

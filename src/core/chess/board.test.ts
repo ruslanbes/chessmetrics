@@ -78,7 +78,7 @@ describe('ChessBoard', () => {
       const board = new ChessBoard(CHESS_POSITIONS.GIUOCO_PIANISSIMO)
       const pieces = board.getPieces()
       
-      expect(pieces.length).toBeGreaterThan(0)
+      expect(pieces.length).toBe(32)
       expect(pieces.every(p => p.color === 'white' || p.color === 'black')).toBe(true)
     })
 
@@ -87,10 +87,8 @@ describe('ChessBoard', () => {
       const pieces = board.getPieces()
       
       // The kings-only position should have 2 pieces (both kings)
-      expect(pieces.length).toBeGreaterThanOrEqual(0) // Allow for edge cases
-      if (pieces.length > 0) {
-        expect(pieces.filter(p => p.type === 'king')).toHaveLength(2)
-      }
+      expect(pieces.length).toBe(2)
+      expect(pieces.filter(p => p.type === 'king')).toHaveLength(2)
     })
   })
 
@@ -99,7 +97,7 @@ describe('ChessBoard', () => {
       const board = new ChessBoard(CHESS_POSITIONS.STARTING)
       const moves = board.getMoves()
       
-      expect(moves.length).toBeGreaterThan(0)
+      expect(moves.length).toBe(20)
       expect(moves.every(move => 
         move.from && move.to && move.piece && move.color
       )).toBe(true)
@@ -109,7 +107,7 @@ describe('ChessBoard', () => {
       const board = new ChessBoard(CHESS_POSITIONS.AFTER_E4_E5)
       const moves = board.getMoves()
       
-      expect(moves.length).toBeGreaterThan(0)
+      expect(moves.length).toBe(29)
       expect(moves.every(move => 
         move.from && move.to && move.piece && move.color
       )).toBe(true)

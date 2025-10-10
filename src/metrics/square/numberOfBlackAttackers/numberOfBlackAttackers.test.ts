@@ -21,7 +21,7 @@ describe('NumberOfBlackAttackersMetric', () => {
     it('should count black pieces attacking squares occupied by black pieces', () => {
       board = new ChessBoard(CHESS_POSITIONS.STARTING)
       const result = metric.calculate('e7', board) // Black pawn
-      expect(result).toBeGreaterThan(0) // Other black pieces can attack e7
+      expect(result).toBe(4) // Attacked by black queen, king, bishop and knight
     })
 
     it('should return 0 for squares occupied by white pieces', () => {
