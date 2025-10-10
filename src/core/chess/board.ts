@@ -192,6 +192,170 @@ export class ChessBoard {
   }
 
   /**
+   * Get ASCII representation of the board (delegates to chess.js)
+   */
+  getAscii(): string {
+    return this.chess.ascii()
+  }
+
+  /**
+   * Get 2D array representation of the board (delegates to chess.js)
+   */
+  getBoardArray(): any[][] {
+    return this.chess.board()
+  }
+
+  /**
+   * Get all pieces attacking a specific square
+   */
+  getAttackers(square: Square, color: Color): Square[] {
+    const chessColor = color === 'white' ? 'w' : 'b'
+    return this.chess.attackers(square, chessColor)
+  }
+
+  /**
+   * Check if a square is attacked by a specific color
+   */
+  isAttacked(square: Square, color: Color): boolean {
+    const chessColor = color === 'white' ? 'w' : 'b'
+    return this.chess.isAttacked(square, chessColor)
+  }
+
+  /**
+   * Get all squares on a line between two squares (useful for pin detection)
+   */
+  getSquaresBetween(fromSquare: Square, toSquare: Square): Square[] {
+    const fromFile = fromSquare.charCodeAt(0) - 97
+    const fromRank = 8 - parseInt(fromSquare[1]!)
+    const toFile = toSquare.charCodeAt(0) - 97
+    const toRank = 8 - parseInt(toSquare[1]!)
+    
+    const squares: Square[] = []
+    
+    // Determine the direction
+    const fileStep = toFile > fromFile ? 1 : toFile < fromFile ? -1 : 0
+    const rankStep = toRank > fromRank ? 1 : toRank < fromRank ? -1 : 0
+    
+    // Check if squares are aligned (same rank, file, or diagonal)
+    const isAligned = fileStep === 0 || rankStep === 0 || Math.abs(fileStep) === Math.abs(rankStep)
+    if (!isAligned) {
+      return squares // Not aligned, no squares between
+    }
+    
+    // Get squares between (excluding endpoints)
+    let file = fromFile + fileStep
+    let rank = fromRank + rankStep
+    
+    while (file !== toFile || rank !== toRank) {
+      if (file >= 0 && file < 8 && rank >= 0 && rank < 8) {
+        const square = String.fromCharCode(97 + file) + (8 - rank) as Square
+        squares.push(square)
+      }
+      file += fileStep
+      rank += rankStep
+    }
+    
+    return squares
+  }
+
+  /**
+   * Check if three squares are on the same line (rank, file, or diagonal)
+   */
+  areOnSameLine(square1: Square, square2: Square, square3: Square): boolean {
+    const file1 = square1.charCodeAt(0) - 97
+    const rank1 = 8 - parseInt(square1[1]!)
+    const file2 = square2.charCodeAt(0) - 97
+    const rank2 = 8 - parseInt(square2[1]!)
+    const file3 = square3.charCodeAt(0) - 97
+    const rank3 = 8 - parseInt(square3[1]!)
+    
+    // Same rank
+    if (rank1 === rank2 && rank2 === rank3) {
+      return true
+    }
+    
+    // Same file
+    if (file1 === file2 && file2 === file3) {
+      return true
+    }
+    
+    // Same diagonal
+    if (Math.abs(rank1 - rank2) === Math.abs(file1 - file2) &&
+        Math.abs(rank2 - rank3) === Math.abs(file2 - file3) &&
+        Math.abs(rank1 - rank3) === Math.abs(file1 - file3)) {
+      return true
+    }
+    
+    return false
+  }
+
+  /**
+   * Get piece at a specific square (delegates to chess.js)
+   */
+  getPieceAt(square: Square): Piece | null {
+    const piece = this.chess.get(square)
+    if (!piece) return null
+    
+    return {
+      type: this.mapPieceType(piece.type),
+      color: piece.color === 'w' ? 'white' : 'black',
+      square: square
+    }
+  }
+
+  /**
+   * Debug helper: Print board with highlighted squares
+   */
+  debugBoard(highlightSquares: Square[] = []): string {
+    const ascii = this.getAscii()
+    if (highlightSquares.length === 0) {
+      return ascii
+    }
+    
+    // Simple highlighting by adding markers
+    let result = ascii
+    highlightSquares.forEach(square => {
+      const file = square.charCodeAt(0) - 97
+      const rank = 8 - parseInt(square[1]!)
+      const asciiRank = 8 - rank + 1 // Convert to ASCII line number
+      const asciiFile = file * 3 + 2 // Convert to ASCII column position
+      
+      // This is a simplified approach - in practice you might want more sophisticated highlighting
+      result += `\nHighlighted: ${square} at line ${asciiRank}, col ${asciiFile}`
+    })
+    
+    return result
+  }
+
+  /**
+   * Debug helper: Print all pieces with their positions
+   */
+  debugPieces(): string {
+    const pieces = this.getPieces()
+    let result = 'Pieces on board:\n'
+    
+    pieces.forEach(piece => {
+      result += `  ${piece.color} ${piece.type} on ${piece.square}\n`
+    })
+    
+    return result
+  }
+
+  /**
+   * Debug helper: Print attack information for a square
+   */
+  debugAttacks(square: Square): string {
+    const whiteAttackers = this.getAttackers(square, 'white')
+    const blackAttackers = this.getAttackers(square, 'black')
+    
+    let result = `Attack information for ${square}:\n`
+    result += `  Attacked by white: ${whiteAttackers.length > 0 ? whiteAttackers.join(', ') : 'none'}\n`
+    result += `  Attacked by black: ${blackAttackers.length > 0 ? blackAttackers.join(', ') : 'none'}\n`
+    
+    return result
+  }
+
+  /**
    * Map chess.js piece type to our PieceType
    */
   private mapPieceType(chessType: string): PieceType {

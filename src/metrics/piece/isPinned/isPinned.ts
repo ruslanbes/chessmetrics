@@ -8,26 +8,25 @@ export interface PieceMetricContext {
 
 export class IsPinnedMetric {
   description = "isPinned tells if this piece is pinned (some of its moves are invalid due to king exposure)"
+  private board!: ChessBoard
 
   calculate(piece: Piece, board: ChessBoard): boolean {
+    this.board = board
     // A piece is pinned if moving it would expose the king to check
     // We can detect this by temporarily moving the piece and checking if the king is in check
+    
+    // Kings can never be pinned - if a king is under attack, it's in check, not pinned
+    if (piece.type === 'king') {
+      return false
+    }
     
     const king = board.getPieces().find(p => p.color === piece.color && p.type === 'king')
     if (!king) {
       return false
     }
     
-    // Get all legal moves for this piece
-    const allMoves = board.getAllMoves()
-    const pieceMoves = allMoves.filter(move => 
-      move.from === piece.square && move.color === piece.color
-    )
-    
-    // If the piece has no moves, it's not pinned (it's just blocked)
-    if (pieceMoves.length === 0) {
-      return false
-    }
+    // Note: A piece can be pinned even if it has no legal moves
+    // (e.g., a pawn blocked by another piece but still pinned)
     
     // Check if the piece is aligned with its king (same rank, file, or diagonal)
     if (!this.isAlignedWithKing(piece, king)) {
@@ -74,7 +73,11 @@ export class IsPinnedMetric {
       if (this.isOnSameLine(piece.square, king.square, enemyPiece.square)) {
         // Check if this enemy piece can attack the king
         if (this.canAttackSquare(enemyPiece, king.square, board)) {
-          return enemyPiece
+          // Check if there are any pieces blocking the line between the attacking piece and the king
+          // Exclude the piece being checked for pinning from the blocking check
+          if (!this.hasBlockingPieces(enemyPiece.square, king.square, board, piece.square)) {
+            return enemyPiece
+          }
         }
       }
     }
@@ -86,33 +89,34 @@ export class IsPinnedMetric {
    * Check if three squares are on the same line (rank, file, or diagonal)
    */
   private isOnSameLine(square1: string, square2: string, square3: string): boolean {
-    const file1 = square1.charCodeAt(0) - 97
-    const rank1 = parseInt(square1[1]!) - 1
-    const file2 = square2.charCodeAt(0) - 97
-    const rank2 = parseInt(square2[1]!) - 1
-    const file3 = square3.charCodeAt(0) - 97
-    const rank3 = parseInt(square3[1]!) - 1
-    
-    // Same rank
-    if (rank1 === rank2 && rank2 === rank3) {
-      return true
-    }
-    
-    // Same file
-    if (file1 === file2 && file2 === file3) {
-      return true
-    }
-    
-    // Same diagonal
-    if (Math.abs(rank1 - rank2) === Math.abs(file1 - file2) &&
-        Math.abs(rank2 - rank3) === Math.abs(file2 - file3) &&
-        Math.abs(rank1 - rank3) === Math.abs(file1 - file3)) {
-      return true
-    }
-    
-    return false
+    // Use the ChessBoard helper method
+    return this.board.areOnSameLine(square1 as any, square2 as any, square3 as any)
   }
 
+
+  /**
+   * Check if there are any pieces blocking the line between two squares
+   */
+  private hasBlockingPieces(fromSquare: string, toSquare: string, board: ChessBoard, excludeSquare?: string): boolean {
+    // Use the ChessBoard helper method to get squares between
+    const squaresBetween = board.getSquaresBetween(fromSquare as any, toSquare as any)
+    
+    // Check each square for blocking pieces
+    for (const square of squaresBetween) {
+      // Skip the excluded square (e.g., the piece being checked for pinning)
+      if (excludeSquare && square === excludeSquare) {
+        continue
+      }
+      
+      const piece = board.getPieces().find(p => p.square === square)
+      if (piece) {
+        // Any piece blocks the attack - the color doesn't matter for blocking
+        return true // Found a blocking piece
+      }
+    }
+    
+    return false // No blocking pieces found
+  }
 
   /**
    * Check if a piece can attack a specific square

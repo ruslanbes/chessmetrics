@@ -62,5 +62,55 @@ describe('IsPinnedMetric', () => {
       expect(metric.calculate(blackRook!, board)).toBe(true)
       expect(metric.calculate(whiteRook!, board)).toBe(false)
     })
+
+    it('should correctly identify pinned pawn in PINNED_PAWN position', () => {
+      board = new ChessBoard(MIDDLEGAMES.PINNED_PAWN)
+      const pieces = board.getPieces()
+      
+      // Find the black pawn on f7
+      const blackPawnF7 = pieces.find(p => p.color === 'black' && p.type === 'pawn' && p.square === 'f7')
+      
+      expect(blackPawnF7).toBeDefined()
+      
+      // The pawn on f7 should be pinned (it has no legal moves)
+      expect(metric.calculate(blackPawnF7!, board)).toBe(true)
+    })
+
+    it('should never consider kings as pinned', () => {
+      // Test with multiple positions to ensure kings are never pinned
+      const positions = [
+        CHESS_POSITIONS.STARTING,
+        MIDDLEGAMES.MIDDLEGAME_1,
+        MIDDLEGAMES.PINNED_PAWN,
+        ENDINGS.ROOKS_AND_KINGS
+      ]
+
+      positions.forEach((fen) => {
+        board = new ChessBoard(fen)
+        const pieces = board.getPieces()
+        
+        // Find all kings
+        const kings = pieces.filter(p => p.type === 'king')
+        
+        kings.forEach(king => {
+          const isPinned = metric.calculate(king, board)
+          expect(isPinned).toBe(false)
+        })
+      })
+    })
+
+    it('should not consider pieces pinned when enemy pieces block the attack', () => {
+      board = new ChessBoard(MIDDLEGAMES.PINNED_PAWN)
+      const pieces = board.getPieces()
+      
+      // Find the white pawn on f2
+      const whitePawnF2 = pieces.find(p => p.color === 'white' && p.type === 'pawn' && p.square === 'f2')
+      
+      expect(whitePawnF2).toBeDefined()
+      
+      // The pawn on f2 should NOT be pinned because the black pawn on c5 blocks the attack
+      // from the black queen on b6 to the white king on g1
+      expect(metric.calculate(whitePawnF2!, board)).toBe(false)
+    })
   })
 })

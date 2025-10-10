@@ -33,7 +33,9 @@ export const CHESS_POSITIONS = {
 
 export const MIDDLEGAMES = {
     
-  MIDDLEGAME_1: '2rq1rk1/pp3pb1/2n3pp/4pn2/5B2/2P2N2/PP1N1PPP/R1Q1R1K1 w - - 0 15'
+  MIDDLEGAME_1: '2rq1rk1/pp3pb1/2n3pp/4pn2/5B2/2P2N2/PP1N1PPP/R1Q1R1K1 w - - 0 15',
+
+  PINNED_PAWN: 'r4rk1/1b1nbppp/pq6/1ppB2B1/4P3/5N2/PPQ2PPP/3RR1K1 b - - 0 16'
 }
 
 // Endgame positions
