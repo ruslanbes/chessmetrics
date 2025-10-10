@@ -46,14 +46,30 @@ describe('FreedomMetric', () => {
     })
 
     it('should return correct freedom after piece moves', () => {
-      // After 1.e4, it's black's turn, so the e4 pawn should have 0 moves
+      // After 1.e4, the e4 pawn should have 1 move (e4-e5) regardless of turn
       board = new ChessBoard(CHESS_POSITIONS.AFTER_E4)
       const pieces = board.getPieces()
       
       const e4Pawn = pieces.find(p => p.square === 'e4')
       expect(e4Pawn).toBeDefined()
       const pawnFreedom = metric.calculate(e4Pawn!, board)
-      expect(pawnFreedom).toBe(0) // No moves because it's not white's turn
+      expect(pawnFreedom).toBe(1) // Can move to e5 regardless of whose turn it is
+    })
+
+    it('should return freedom for both colors regardless of turn', () => {
+      board = new ChessBoard(CHESS_POSITIONS.STARTING)
+      const pieces = board.getPieces()
+      
+      // Test white and black pawns in starting position
+      const whitePawn = pieces.find(p => p.color === 'white' && p.square === 'e2')
+      const blackPawn = pieces.find(p => p.color === 'black' && p.square === 'e7')
+      
+      expect(whitePawn).toBeDefined()
+      expect(blackPawn).toBeDefined()
+      
+      // Both should have 2 freedom regardless of whose turn it is
+      expect(metric.calculate(whitePawn!, board)).toBe(2)
+      expect(metric.calculate(blackPawn!, board)).toBe(2)
     })
   })
 

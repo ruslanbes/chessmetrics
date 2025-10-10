@@ -4,12 +4,13 @@
 import { NumberOfWhiteAttackersMetric } from '../../metrics/square/numberOfWhiteAttackers/numberOfWhiteAttackers'
 import { NumberOfBlackAttackersMetric } from '../../metrics/square/numberOfBlackAttackers/numberOfBlackAttackers'
 import { IsMyTurnMetric } from '../../metrics/player/isMyTurn/isMyTurn'
+import { PlayerFreedomMetric } from '../../metrics/player/freedom/freedom'
 import { IsHangingMetric } from '../../metrics/piece/isHanging/isHanging'
 import { FreedomMetric } from '../../metrics/piece/freedom/freedom'
 
 export const METRIC_REGISTRY = {
   square: [NumberOfWhiteAttackersMetric, NumberOfBlackAttackersMetric],
-  player: [IsMyTurnMetric],
+  player: [IsMyTurnMetric, PlayerFreedomMetric],
   piece: [IsHangingMetric, FreedomMetric],
 } as const
 
@@ -34,6 +35,12 @@ export const METRIC_METADATA = {
       type: 'boolean',
       category: 'player',
       className: 'IsMyTurnMetric'
+    },
+    'player.freedom': {
+      name: 'player.freedom',
+      type: 'number',
+      category: 'player',
+      className: 'PlayerFreedomMetric'
     },
   },
   piece: {

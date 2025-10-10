@@ -13,11 +13,13 @@ export class FreedomMetric {
   dependencies: string[] = []
 
   calculate(piece: Piece, board: ChessBoard): number {
-    // Get all legal moves for the current position
-    const allMoves = board.getMoves()
+    // Get all possible moves for both colors
+    const allMoves = board.getAllMoves()
     
-    // Filter moves that start from this piece's square
-    const pieceMoves = allMoves.filter(move => move.from === piece.square)
+    // Filter moves that start from this piece's square and are for this piece's color
+    const pieceMoves = allMoves.filter(move => 
+      move.from === piece.square && move.color === piece.color
+    )
     
     return pieceMoves.length
   }
