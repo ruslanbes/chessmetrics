@@ -7,13 +7,14 @@ import { QueensFreedomMetric } from '../../metrics/player/queensFreedom/queensFr
 import { KingsFreedomMetric } from '../../metrics/player/kingsFreedom/kingsFreedom'
 import { IsMyTurnMetric } from '../../metrics/player/isMyTurn/isMyTurn'
 import { PlayerFreedomMetric } from '../../metrics/player/freedom/freedom'
+import { IsPinnedMetric } from '../../metrics/piece/isPinned/isPinned'
 import { IsHangingMetric } from '../../metrics/piece/isHanging/isHanging'
 import { FreedomMetric } from '../../metrics/piece/freedom/freedom'
 
 export const METRIC_REGISTRY = {
   square: [NumberOfWhiteAttackersMetric, NumberOfBlackAttackersMetric],
   player: [QueensFreedomMetric, KingsFreedomMetric, IsMyTurnMetric, PlayerFreedomMetric],
-  piece: [IsHangingMetric, FreedomMetric],
+  piece: [IsPinnedMetric, IsHangingMetric, FreedomMetric],
 } as const
 
 export const METRIC_METADATA = {
@@ -58,6 +59,12 @@ export const METRIC_METADATA = {
     },
   },
   piece: {
+    'piece.isPinned': {
+      name: 'piece.isPinned',
+      type: 'boolean',
+      category: 'piece',
+      className: 'IsPinnedMetric'
+    },
     'piece.isHanging': {
       name: 'piece.isHanging',
       type: 'boolean',
