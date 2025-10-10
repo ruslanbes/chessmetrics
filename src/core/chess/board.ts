@@ -1,11 +1,20 @@
 import { Chess } from 'chess.js'
 import { Color, Piece, Move, PieceType, Square, SquareUtils } from '../../types/chess'
+import { AttackAnalyzer } from './AttackAnalyzer'
+import { BoardDebugger } from './BoardDebugger'
+import { GeometricAnalyzer } from './GeometricAnalyzer'
 
 export class ChessBoard {
-  private chess: Chess
+  public chess: Chess
+  private attackAnalyzer: AttackAnalyzer
+  private geometricAnalyzer: GeometricAnalyzer
+  private debugger: BoardDebugger
 
   constructor(fen: string) {
     this.chess = new Chess(fen)
+    this.attackAnalyzer = new AttackAnalyzer(this)
+    this.geometricAnalyzer = new GeometricAnalyzer()
+    this.debugger = new BoardDebugger(this)
   }
 
   /**
@@ -105,72 +114,7 @@ export class ChessBoard {
    * Logic: imagine there's an enemy pawn on the target square and it's the attacking player's turn
    */
   canAttack(fromSquare: Square, toSquare: Square, attackingColor: Color): boolean {
-    const currentFen = this.chess.fen()
-    const enemyColor = attackingColor === 'white' ? 'black' : 'white'
-    const attackingTurn = attackingColor === 'white' ? 'w' : 'b'
-    
-    try {
-      // Create a temporary chess instance
-      const fenParts = currentFen.split(' ')
-      fenParts[1] = attackingTurn // Set turn to attacking player
-      fenParts[3] = '-' // Clear en-passant square to avoid illegal positions
-      const tempFen = fenParts.join(' ')
-      const tempChess = new (this.chess.constructor as any)(tempFen)
-      
-      // Place an enemy pawn on the target square (regardless of what's currently there)
-      tempChess.put({ type: 'p', color: enemyColor === 'white' ? 'w' : 'b' }, toSquare)
-      
-      // Check if the attacking piece can move to the target square
-      const moves = tempChess.moves({ square: fromSquare, verbose: true })
-      return moves.some((move: any) => move.to === toSquare)
-    } catch (error) {
-      // If we can't create the temporary position, fall back to basic attack detection
-      return this.basicAttackDetection(fromSquare, toSquare, attackingColor)
-    }
-  }
-
-  /**
-   * Basic attack detection for common piece patterns
-   */
-  private basicAttackDetection(fromSquare: Square, toSquare: Square, attackingColor: Color): boolean {
-    const fromCoords = SquareUtils.toCoordinates(fromSquare)
-    const toCoords = SquareUtils.toCoordinates(toSquare)
-
-    const fileDiff = Math.abs(toCoords.file - fromCoords.file)
-    const rankDiff = Math.abs(toCoords.rank - fromCoords.rank)
-
-    // Get the piece on the from square
-    const piece = this.chess.get(fromSquare)
-    if (!piece) return false
-
-    // Check if it's the right color
-    const pieceColor = piece.color === 'w' ? 'white' : 'black'
-    if (pieceColor !== attackingColor) return false
-
-    // Basic attack patterns
-    switch (piece.type) {
-      case 'p': // Pawn
-        const direction = attackingColor === 'white' ? 1 : -1
-        return fileDiff === 1 && (toCoords.rank - fromCoords.rank) === direction
-      
-      case 'r': // Rook
-        return (fileDiff === 0 && rankDiff > 0) || (rankDiff === 0 && fileDiff > 0)
-      
-      case 'b': // Bishop
-        return fileDiff === rankDiff && fileDiff > 0
-      
-      case 'q': // Queen
-        return (fileDiff === 0 && rankDiff > 0) || (rankDiff === 0 && fileDiff > 0) || (fileDiff === rankDiff && fileDiff > 0)
-      
-      case 'k': // King
-        return fileDiff <= 1 && rankDiff <= 1 && (fileDiff > 0 || rankDiff > 0)
-      
-      case 'n': // Knight
-        return (fileDiff === 2 && rankDiff === 1) || (fileDiff === 1 && rankDiff === 2)
-      
-      default:
-        return false
-    }
+    return this.attackAnalyzer.canAttack(fromSquare, toSquare, attackingColor)
   }
 
   /**
@@ -211,30 +155,28 @@ export class ChessBoard {
    * Get all pieces attacking a specific square
    */
   getAttackers(square: Square, color: Color): Square[] {
-    const chessColor = color === 'white' ? 'w' : 'b'
-    return this.chess.attackers(square, chessColor)
+    return this.attackAnalyzer.getAttackers(square, color)
   }
 
   /**
    * Check if a square is attacked by a specific color
    */
   isAttacked(square: Square, color: Color): boolean {
-    const chessColor = color === 'white' ? 'w' : 'b'
-    return this.chess.isAttacked(square, chessColor)
+    return this.attackAnalyzer.isAttacked(square, color)
   }
 
   /**
    * Get all squares on a line between two squares (useful for pin detection)
    */
   getSquaresBetween(fromSquare: Square, toSquare: Square): Square[] {
-    return SquareUtils.getSquaresBetween(fromSquare, toSquare)
+    return this.geometricAnalyzer.getSquaresBetween(fromSquare, toSquare)
   }
 
   /**
    * Check if three squares are on the same line (rank, file, or diagonal)
    */
   areOnSameLine(square1: Square, square2: Square, square3: Square): boolean {
-    return SquareUtils.areOnSameLine(square1, square2, square3)
+    return this.geometricAnalyzer.areOnSameLine(square1, square2, square3)
   }
 
   /**
@@ -258,51 +200,21 @@ export class ChessBoard {
    * Debug helper: Print board with highlighted squares
    */
   debugBoard(highlightSquares: Square[] = []): string {
-    const ascii = this.getAscii()
-    if (highlightSquares.length === 0) {
-      return ascii
-    }
-    
-    // Simple highlighting by adding markers
-    let result = ascii
-    highlightSquares.forEach(square => {
-      const coordinates = SquareUtils.toCoordinates(square)
-      const asciiRank = 8 - coordinates.rank + 1 // Convert to ASCII line number
-      const asciiFile = coordinates.file * 3 + 2 // Convert to ASCII column position
-      
-      // This is a simplified approach - in practice you might want more sophisticated highlighting
-      result += `\nHighlighted: ${square} at line ${asciiRank}, col ${asciiFile}`
-    })
-    
-    return result
+    return this.debugger.debugBoard(highlightSquares)
   }
 
   /**
    * Debug helper: Print all pieces with their positions
    */
   debugPieces(): string {
-    const pieces = this.getPieces()
-    let result = 'Pieces on board:\n'
-    
-    pieces.forEach(piece => {
-      result += `  ${piece.color} ${piece.type} on ${piece.square}\n`
-    })
-    
-    return result
+    return this.debugger.debugPieces()
   }
 
   /**
    * Debug helper: Print attack information for a square
    */
   debugAttacks(square: Square): string {
-    const whiteAttackers = this.getAttackers(square, 'white')
-    const blackAttackers = this.getAttackers(square, 'black')
-    
-    let result = `Attack information for ${square}:\n`
-    result += `  Attacked by white: ${whiteAttackers.length > 0 ? whiteAttackers.join(', ') : 'none'}\n`
-    result += `  Attacked by black: ${blackAttackers.length > 0 ? blackAttackers.join(', ') : 'none'}\n`
-    
-    return result
+    return this.debugger.debugAttacks(square)
   }
 
   /**

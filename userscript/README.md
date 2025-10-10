@@ -104,6 +104,12 @@ const metrics = chessmetrics.standard.fen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RN
 console.log(metrics.players.white.isMyTurn) // true
 ```
 
+## Lichess test links
+
+Any game can be tested as long as the analysis is enabled on the page. For example:
+
+- https://lichess.org/idTXJGOY
+
 ## License
 
 ISC License - see main project LICENSE file.
