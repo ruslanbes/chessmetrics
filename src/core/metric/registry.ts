@@ -4,15 +4,13 @@
 import { NumberOfWhiteAttackersMetric } from '../../metrics/square/numberOfWhiteAttackers/numberOfWhiteAttackers'
 import { NumberOfBlackAttackersMetric } from '../../metrics/square/numberOfBlackAttackers/numberOfBlackAttackers'
 import { IsMyTurnMetric } from '../../metrics/player/isMyTurn/isMyTurn'
-import { NumberOfAttackersMetric } from '../../metrics/piece/numberOfAttackers/numberOfAttackers'
 import { IsHangingMetric } from '../../metrics/piece/isHanging/isHanging'
-import { IsAttackedMetric } from '../../metrics/piece/isAttacked/isAttacked'
 import { FreedomMetric } from '../../metrics/piece/freedom/freedom'
 
 export const METRIC_REGISTRY = {
   square: [NumberOfWhiteAttackersMetric, NumberOfBlackAttackersMetric],
   player: [IsMyTurnMetric],
-  piece: [NumberOfAttackersMetric, IsHangingMetric, IsAttackedMetric, FreedomMetric],
+  piece: [IsHangingMetric, FreedomMetric],
 } as const
 
 export const METRIC_METADATA = {
@@ -39,23 +37,11 @@ export const METRIC_METADATA = {
     },
   },
   piece: {
-    'piece.numberOfAttackers': {
-      name: 'piece.numberOfAttackers',
-      type: 'number',
-      category: 'piece',
-      className: 'NumberOfAttackersMetric'
-    },
     'piece.isHanging': {
       name: 'piece.isHanging',
       type: 'boolean',
       category: 'piece',
       className: 'IsHangingMetric'
-    },
-    'piece.isAttacked': {
-      name: 'piece.isAttacked',
-      type: 'boolean',
-      category: 'piece',
-      className: 'IsAttackedMetric'
     },
     'piece.freedom': {
       name: 'piece.freedom',

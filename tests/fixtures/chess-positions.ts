@@ -25,7 +25,10 @@ export const CHESS_POSITIONS = {
   GIUOCO_PIANISSIMO: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 4 4',
   
   // Queen's Gambit opening (after 1.c4)
-  QUEENS_GAMBIT: 'rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2'
+  QUEENS_GAMBIT: 'rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq - 0 2',
+  
+  // Petrov's Defence (e4 and e5 are both hanging)
+  PETROV_DEFENCE: 'rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3'
 }
 
 // Edge cases for testing
