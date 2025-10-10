@@ -24,3 +24,5 @@ window.chessmetrics = new ChessMetricsAPI()
 
 console.log('♟️ Chessmetrics userscript loaded!')
 console.log('📊 Available: window.chessmetrics.standard.fen(fenString)')
+console.log('🎯 Available: window.chessmetrics.detectBoard()')
+console.log('🔍 Available: window.chessmetrics.debugPage()')

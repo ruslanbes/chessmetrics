@@ -31,6 +31,11 @@ export const CHESS_POSITIONS = {
   PETROV_DEFENCE: 'rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3'
 }
 
+export const MIDDLEGAMES = {
+    
+  MIDDLEGAME_1: '2rq1rk1/pp3pb1/2n3pp/4pn2/5B2/2P2N2/PP1N1PPP/R1Q1R1K1 w - - 0 15'
+}
+
 // Endgame positions
 export const ENDINGS = {
   // Rooks and kings endgame (black rook on f4 is pinned)
