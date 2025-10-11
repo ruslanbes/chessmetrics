@@ -118,6 +118,8 @@ window.chessmetrics.stopMoveTracking()
             <button id="startTracking">Start Move Tracking</button>
             <button id="stopTracking" disabled>Stop Move Tracking</button>
             <button id="checkStatus">Check Status</button>
+            <button id="enableDebug">Enable Debug</button>
+            <button id="disableDebug">Disable Debug</button>
             <div id="trackingStatus" class="status info">Click "Check Status" to see if Chessmetrics is loaded on Lichess</div>
         </div>
 
@@ -137,6 +139,11 @@ if (board.includes('FEN:')) {
 
 // Debug page info
 window.chessmetrics.debugPage()
+
+// Debug mode controls
+window.chessmetrics.setDebugMode(true)   // Enable debug logging
+window.chessmetrics.setDebugMode(false)  // Disable debug logging
+window.chessmetrics.isDebugMode()        // Check debug status
             </div>
         </div>
 
@@ -185,6 +192,24 @@ window.chessmetrics.debugPage()
             const command = 'window.chessmetrics.isMoveTrackingActive()';
             navigator.clipboard.writeText(command).then(() => {
                 updateStatus('Status check command copied! Paste it in the Lichess page console.', 'success');
+            }).catch(() => {
+                updateStatus('Copy this command to the Lichess console: ' + command, 'info');
+            });
+        });
+
+        document.getElementById('enableDebug').addEventListener('click', () => {
+            const command = 'window.chessmetrics.setDebugMode(true)';
+            navigator.clipboard.writeText(command).then(() => {
+                updateStatus('Enable debug command copied! Paste it in the Lichess page console.', 'success');
+            }).catch(() => {
+                updateStatus('Copy this command to the Lichess console: ' + command, 'info');
+            });
+        });
+
+        document.getElementById('disableDebug').addEventListener('click', () => {
+            const command = 'window.chessmetrics.setDebugMode(false)';
+            navigator.clipboard.writeText(command).then(() => {
+                updateStatus('Disable debug command copied! Paste it in the Lichess page console.', 'success');
             }).catch(() => {
                 updateStatus('Copy this command to the Lichess console: ' + command, 'info');
             });

@@ -6,6 +6,7 @@ export interface MoveTrackerOptions {
   onMoveChange?: (fen: string, ply: number) => void
   onBoardChange?: (boardElement: HTMLElement) => void
   debounceMs?: number
+  debug?: boolean
 }
 
 export class MoveTracker {
@@ -20,7 +21,17 @@ export class MoveTracker {
   constructor(options: MoveTrackerOptions = {}) {
     this.options = {
       debounceMs: 100,
+      debug: false,
       ...options
+    }
+  }
+
+  /**
+   * Debug logging helper - only logs if debug is enabled
+   */
+  private debugLog(...args: any[]): void {
+    if (this.options.debug) {
+      console.log(...args)
     }
   }
 
@@ -31,7 +42,7 @@ export class MoveTracker {
     if (this.isTracking) return
     
     this.isTracking = true
-    console.log('🎯 MoveTracker: Starting move navigation tracking')
+    this.debugLog('🎯 MoveTracker: Starting move navigation tracking')
     
     this.setupKeyboardListeners()
     this.setupDOMListeners()
@@ -47,7 +58,7 @@ export class MoveTracker {
     if (!this.isTracking) return
     
     this.isTracking = false
-    console.log('🎯 MoveTracker: Stopping move navigation tracking')
+    this.debugLog('🎯 MoveTracker: Stopping move navigation tracking')
     
     this.cleanupEventListeners()
     this.cleanupMutationObserver()
@@ -251,9 +262,9 @@ export class MoveTracker {
       const ply = this.getCurrentPly()
       
       if (fen && fen !== this.currentFen) {
-        console.log(`🎯 MoveTracker: Position changed via ${source} (${details})`)
-        console.log(`📊 New FEN: ${fen}`)
-        console.log(`📍 New Ply: ${ply}`)
+        this.debugLog(`🎯 MoveTracker: Position changed via ${source} (${details})`)
+        this.debugLog(`📊 New FEN: ${fen}`)
+        this.debugLog(`📍 New Ply: ${ply}`)
         
         this.currentFen = fen
         this.currentPly = ply

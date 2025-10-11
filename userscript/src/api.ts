@@ -8,6 +8,7 @@ import { MoveTracker } from './sites/lichess/move-tracker'
 export class ChessMetricsAPI {
   private lichessIntegration: LichessIntegration
   private moveTracker: MoveTracker | null = null
+  private debugMode: boolean = false
 
   constructor() {
     this.lichessIntegration = new LichessIntegration()
@@ -140,13 +141,18 @@ export class ChessMetricsAPI {
 
       this.moveTracker = new MoveTracker({
         onMoveChange: (fen: string, ply: number) => {
-          console.log(`🎯 MoveTracker: Position changed to ply ${ply}`)
+          if (this.debugMode) {
+            console.log(`🎯 MoveTracker: Position changed to ply ${ply}`)
+          }
           this.analyzeCurrentPosition(fen, ply)
         },
         onBoardChange: (boardElement: HTMLElement) => {
-          console.log(`🎯 MoveTracker: Board element changed`)
+          if (this.debugMode) {
+            console.log(`🎯 MoveTracker: Board element changed`)
+          }
         },
-        debounceMs: 150
+        debounceMs: 150,
+        debug: this.debugMode
       })
 
       this.moveTracker.start()
@@ -183,32 +189,52 @@ export class ChessMetricsAPI {
   }
 
   /**
+   * Enable or disable debug logging
+   */
+  setDebugMode(enabled: boolean): void {
+    this.debugMode = enabled
+    console.log(`🔧 Debug mode ${enabled ? 'enabled' : 'disabled'}`)
+  }
+
+  /**
+   * Check if debug mode is enabled
+   */
+  isDebugMode(): boolean {
+    return this.debugMode
+  }
+
+  /**
    * Analyze the current position and log results
    */
   private analyzeCurrentPosition(fen: string, ply: number): void {
     try {
       const analysis = this.standard.fen(fen)
-      console.log(`📊 Analysis for ply ${ply}:`, analysis)
       
-      // Log key metrics
-      console.log(`🎯 Key Metrics:`)
-      console.log(`  - Turn: ${analysis.players.white.isMyTurn ? 'White' : 'Black'}`)
-      
-      // Log piece metrics
-      const hangingPieces = analysis.pieces.filter(p => p.isHanging).length
-      const totalPieces = analysis.pieces.length
-      const averageFreedom = analysis.pieces.reduce((sum, p) => sum + p.freedom, 0) / totalPieces
-      console.log(`  - Total Pieces: ${totalPieces}`)
-      console.log(`  - Hanging Pieces: ${hangingPieces}`)
-      console.log(`  - Average Freedom: ${averageFreedom.toFixed(2)}`)
-      
-      // Log square metrics
-      const totalSquares = analysis.squares.length
-      const attackedSquares = analysis.squares.filter(s => s.numberOfWhiteAttackers > 0 || s.numberOfBlackAttackers > 0).length
-      console.log(`  - Attacked Squares: ${attackedSquares}/${totalSquares}`)
+      if (this.debugMode) {
+        console.log(`📊 Analysis for ply ${ply}:`, analysis)
+        
+        // Log key metrics
+        console.log(`🎯 Key Metrics:`)
+        console.log(`  - Turn: ${analysis.players.white.isMyTurn ? 'White' : 'Black'}`)
+        
+        // Log piece metrics
+        const hangingPieces = analysis.pieces.filter(p => p.isHanging).length
+        const totalPieces = analysis.pieces.length
+        const averageFreedom = analysis.pieces.reduce((sum, p) => sum + p.freedom, 0) / totalPieces
+        console.log(`  - Total Pieces: ${totalPieces}`)
+        console.log(`  - Hanging Pieces: ${hangingPieces}`)
+        console.log(`  - Average Freedom: ${averageFreedom.toFixed(2)}`)
+        
+        // Log square metrics
+        const totalSquares = analysis.squares.length
+        const attackedSquares = analysis.squares.filter(s => s.numberOfWhiteAttackers > 0 || s.numberOfBlackAttackers > 0).length
+        console.log(`  - Attacked Squares: ${attackedSquares}/${totalSquares}`)
+      }
       
     } catch (error) {
-      console.warn(`Failed to analyze position at ply ${ply}:`, error)
+      if (this.debugMode) {
+        console.warn(`Failed to analyze position at ply ${ply}:`, error)
+      }
     }
   }
 }

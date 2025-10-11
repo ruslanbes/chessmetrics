@@ -75,9 +75,22 @@ window.chessmetrics.stopMoveTracking()
 window.chessmetrics.isMoveTrackingActive()
 ```
 
+### Debug Mode Control
+
+```javascript
+// Enable debug logging (shows detailed console output)
+window.chessmetrics.setDebugMode(true)
+
+// Disable debug logging (silent operation)
+window.chessmetrics.setDebugMode(false)
+
+// Check current debug status
+window.chessmetrics.isDebugMode()
+```
+
 ## 🎯 What Happens When You Navigate
 
-Once you start move tracking, every time you navigate to a different move on Lichess, you'll see output like this in the console:
+Once you start move tracking, every time you navigate to a different move on Lichess, you'll see output like this in the console (when debug mode is enabled):
 
 ```
 🎯 MoveTracker: Position changed to ply 15
@@ -89,6 +102,8 @@ Once you start move tracking, every time you navigate to a different move on Lic
   - Average Freedom: 3.25
   - Attacked Squares: 12/64
 ```
+
+**Note**: By default, debug mode is **disabled** for a clean console experience. Enable it with `window.chessmetrics.setDebugMode(true)` to see detailed logging.
 
 ## 🔧 Supported Navigation Methods
 
