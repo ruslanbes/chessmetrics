@@ -10,7 +10,7 @@ export class AttackAnalyzer {
   constructor(private board: BoardInterface) {}
 
   /**
-   * Check if a piece on a given square can attack a target square
+   * Check if a piece on a given square can attack a target square...
    * Logic: imagine there's an enemy pawn on the target square and it's the attacking player's turn
    */
   canAttack(fromSquare: Square, toSquare: Square, attackingColor: Color): boolean {
