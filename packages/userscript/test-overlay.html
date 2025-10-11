@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chessmetrics Overlay Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .code {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .instructions {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Chessmetrics Overlay System Test</h1>
+    
+    <div class="instructions">
+        <h3>📋 Testing Instructions</h3>
+        <ol>
+            <li><strong>Install the userscript</strong> in Tampermonkey/Greasemonkey</li>
+            <li><strong>Go to a Lichess analysis page</strong> with a position containing pinned pieces</li>
+            <li><strong>Open browser console</strong> (F12 → Console tab)</li>
+            <li><strong>Run the commands below</strong> to test the overlay system</li>
+            <li><strong>Navigate through moves</strong> to see pin indicators (📍) appear on pinned pieces</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h3>🔧 Setup Commands</h3>
+        <p>Copy and paste these commands in the browser console on a Lichess page:</p>
+        
+        <div class="code">
+// Enable debug mode to see detailed logs
+window.chessmetrics.setDebugMode(true)
+        </div>
+        
+        <div class="code">
+// Start move tracking (this will also start the overlay system)
+window.chessmetrics.startMoveTracking()
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>🎯 Test Commands</h3>
+        <p>Use these commands to test the overlay system:</p>
+        
+        <div class="code">
+// Check if move tracking is active
+window.chessmetrics.isMoveTrackingActive()
+        </div>
+        
+        <div class="code">
+// Check if debug mode is enabled
+window.chessmetrics.isDebugMode()
+        </div>
+        
+        <div class="code">
+// Stop move tracking (this will also stop the overlay)
+window.chessmetrics.stopMoveTracking()
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>🔍 What to Look For</h3>
+        <ul>
+            <li><strong>Console logs</strong> showing overlay engine initialization</li>
+            <li><strong>Pin indicators (📍)</strong> appearing in the bottom-right corner of pinned piece squares</li>
+            <li><strong>Indicators updating</strong> when you navigate to different moves</li>
+            <li><strong>Indicators disappearing</strong> when you stop move tracking</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 Test Positions</h3>
+        <p>Try these Lichess analysis URLs with known pinned pieces:</p>
+        <ul>
+            <li><a href="https://lichess.org/analysis" target="_blank">Lichess Analysis Board</a> - Set up a position with pinned pieces</li>
+            <li>Look for positions where a piece is pinned to the king by a bishop, rook, or queen</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>🐛 Troubleshooting</h3>
+        <p>If the overlay doesn't work:</p>
+        <ul>
+            <li>Check browser console for error messages</li>
+            <li>Ensure you're on a Lichess page with a chess board</li>
+            <li>Try refreshing the page and running the commands again</li>
+            <li>Make sure the userscript is properly installed in Tampermonkey</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 Expected Console Output</h3>
+        <p>When working correctly, you should see logs like:</p>
+        <div class="code">
+OverlayEngine: Initialized with Lichess (Chessground) adapter
+OverlayEngine: Registered visualizer: pinned-pieces
+🎯 MoveTracker: Position changed to ply 10
+OverlayEngine: Rendered 2 overlays
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity to the test page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Chessmetrics Overlay Test Page Loaded');
+            console.log('📋 Instructions: Install the userscript and test on a Lichess page');
+        });
+    </script>
+</body>
+</html>

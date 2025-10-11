@@ -1,0 +1,12 @@
+{
+  "name": "@chessmetrics/userscript",
+  "version": "1.0.0",
+  "description": "Chessmetrics userscript for Lichess and Chess.com",
+  "private": true,
+  "scripts": {
+    "copy-shared": "node build/copy-shared.js",
+    "build": "npm run copy-shared && webpack --config build/webpack.config.js",
+    "watch": "npm run copy-shared && webpack --config build/webpack.config.js --watch",
+    "package": "cd dist && zip -r ../chessmetrics-userscript.zip . && echo 'Package created: chessmetrics-userscript.zip'"
+  }
+}

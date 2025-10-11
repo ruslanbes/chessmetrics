@@ -8,9 +8,10 @@ yarn-error.log*
 dist/
 build/
 
-# Userscript build output
-userscript/dist/
-userscript/node_modules/
+# Package build outputs
+packages/*/dist/
+packages/*/node_modules/
+packages/*/shared/
 
 # Environment variables
 .env
@@ -39,7 +40,7 @@ cache/
 
 # Webpack build cache
 .webpack/
-userscript/.webpack/
+packages/*/.webpack/
 
 # Coverage
 coverage/
@@ -49,6 +50,5 @@ coverage/
 tmp/
 temp/
 
-# Userscript development
-userscript/src/shared/
-*.user.js.map
+# Extension packages
+*.zip

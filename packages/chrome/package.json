@@ -1,0 +1,12 @@
+{
+  "name": "@chessmetrics/chrome",
+  "version": "1.0.0",
+  "description": "Chessmetrics Chrome extension for Lichess and Chess.com",
+  "private": true,
+  "scripts": {
+    "copy-shared": "node build/copy-shared.js",
+    "build": "npm run copy-shared && webpack --config build/webpack.config.js",
+    "watch": "npm run copy-shared && webpack --config build/webpack.config.js --watch",
+    "package": "cd dist && zip -r ../chessmetrics-chrome.zip . && echo 'Package created: chessmetrics-chrome.zip'"
+  }
+}

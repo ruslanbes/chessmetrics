@@ -11,18 +11,29 @@
     "generate:registry": "ts-node build-scripts/generate-metrics-registry.ts",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "build:userscript": "npm run build && node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
-    "build:userscript-only": "node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
-    "dev:userscript": "webpack --config userscript/build/webpack.config.js --watch",
+    
+    "build:chrome": "cd packages/chrome && npm run build",
+    "build:firefox": "cd packages/firefox && npm run build",
+    "build:userscript": "cd packages/userscript && npm run build",
+    "build:all-packages": "npm run build:chrome && npm run build:firefox && npm run build:userscript",
+    
+    "watch:chrome": "cd packages/chrome && npm run watch",
+    "watch:firefox": "cd packages/firefox && npm run watch",
+    "watch:userscript": "cd packages/userscript && npm run watch",
+    
+    "package:chrome": "cd packages/chrome && npm run package",
+    "package:firefox": "cd packages/firefox && npm run package",
+    "package:all": "npm run package:chrome && npm run package:firefox",
+    
     "test": "jest",
-    "test:userscript": "open userscript/test.html",
     "test:unit": "jest --testPathIgnorePatterns=integration",
     "test:integration": "jest --testPathPatterns=integration",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --watchAll=false",
     "lint": "echo \"Linting not configured yet\"",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "release": "npm run build && npm run build:all-packages && npm run package:all"
   },
   "keywords": [
     "chess",
