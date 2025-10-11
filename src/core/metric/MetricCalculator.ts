@@ -1,5 +1,5 @@
 import { ChessBoard } from '../chess/ChessBoard'
-import { METRIC_REGISTRY, METRIC_METADATA, MetricClass } from './registry'
+import { METRIC_REGISTRY, METRIC_METADATA, MetricClass } from './MetricRegistry'
 import { PlayerMetrics, PieceMetrics, SquareMetrics } from '../../types/api'
 import { Piece, Square } from '../../types/chess'
 

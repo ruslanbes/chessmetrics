@@ -1,4 +1,4 @@
-import { MetricCalculator } from './calculator'
+import { MetricCalculator } from './MetricCalculator'
 import { ChessBoard } from '../chess/ChessBoard'
 import { CHESS_POSITIONS, ENDINGS } from '../../../tests/fixtures/chess-positions'
 

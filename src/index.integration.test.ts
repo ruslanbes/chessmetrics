@@ -5,7 +5,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import compression from 'compression'
 import { ChessBoard } from './core/chess/ChessBoard'
-import { MetricCalculator } from './core/metric/calculator'
+import { MetricCalculator } from './core/metric/MetricCalculator'
 import { ChessMetricsResponse, ApiError } from './types/api'
 import { CHESS_POSITIONS } from '../tests/fixtures/chess-positions'
 

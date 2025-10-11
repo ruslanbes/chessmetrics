@@ -20,7 +20,7 @@ function generateMetricsRegistry(): void {
   console.log('🔍 Scanning metrics directory...')
   
   const metricsDir = path.join(__dirname, '../src/metrics')
-  const registryPath = path.join(__dirname, '../src/core/metric/registry.ts')
+  const registryPath = path.join(__dirname, '../src/core/metric/MetricRegistry.ts')
   
   // Find all metric files (excluding test files)
   const metricFiles = glob.sync('**/*.ts', {
