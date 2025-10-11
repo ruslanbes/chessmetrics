@@ -8,11 +8,11 @@
   },
   "scripts": {
     "build": "npm run generate:registry && tsc",
-    "build:all": "npm run build && npm run build:userscript",
     "generate:registry": "ts-node build-scripts/generate-metrics-registry.ts",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "build:userscript": "node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
+    "build:userscript": "npm run build && node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
+    "build:userscript-only": "node userscript/build/copy-shared.js && webpack --config userscript/build/webpack.config.js",
     "dev:userscript": "webpack --config userscript/build/webpack.config.js --watch",
     "test": "jest",
     "test:userscript": "open userscript/test.html",

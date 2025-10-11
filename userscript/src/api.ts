@@ -4,10 +4,13 @@ import { MetricCalculator } from './shared/core/metric/MetricCalculator'
 import { Chess } from 'chess.js'
 import { LichessIntegration } from './sites/lichess'
 import { MoveTracker } from './sites/lichess/move-tracker'
+import { OverlayManager } from './overlay/OverlayManager'
+import { LichessOverlayAdapter } from './sites/lichess/LichessOverlayAdapter'
 
 export class ChessMetricsAPI {
   private lichessIntegration: LichessIntegration
   private moveTracker: MoveTracker | null = null
+  private overlayManager: OverlayManager | null = null
   private debugMode: boolean = false
 
   constructor() {
@@ -155,6 +158,13 @@ export class ChessMetricsAPI {
         debug: this.debugMode
       })
 
+      // Initialize overlay manager with Lichess adapter
+      if (!this.overlayManager) {
+        const adapter = new LichessOverlayAdapter()
+        this.overlayManager = new OverlayManager(adapter, { debug: this.debugMode })
+      }
+      this.overlayManager.start()
+
       this.moveTracker.start()
       return "Move tracking started! Navigate through moves to see automatic analysis."
     } catch (error) {
@@ -174,6 +184,12 @@ export class ChessMetricsAPI {
 
       this.moveTracker.stop()
       this.moveTracker = null
+      
+      // Stop overlay
+      if (this.overlayManager) {
+        this.overlayManager.stop()
+      }
+      
       return "Move tracking stopped"
     } catch (error) {
       console.error("Error stopping move tracking:", error)
@@ -209,6 +225,11 @@ export class ChessMetricsAPI {
   private analyzeCurrentPosition(fen: string, ply: number): void {
     try {
       const analysis = this.standard.fen(fen)
+      
+      // Update overlay with new metrics
+      if (this.overlayManager) {
+        this.overlayManager.updateMetrics(analysis)
+      }
       
       if (this.debugMode) {
         console.log(`📊 Analysis for ply ${ply}:`, analysis)
