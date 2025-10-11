@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chessmetrics Move Tracking Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .instructions {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>♟️ Chessmetrics Move Tracking Test</h1>
+        
+        <div class="instructions">
+            <h3>📋 Prerequisites:</h3>
+            <ol>
+                <li><strong>Install Tampermonkey</strong> browser extension</li>
+                <li><strong>Install the Chessmetrics userscript</strong> (see INSTALLATION.md)</li>
+                <li><strong>Go to any Lichess page</strong> (analysis, game, puzzle)</li>
+                <li><strong>Open browser console</strong> (F12) and run the commands below</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Quick Start</h3>
+            <p>Copy and paste these commands into the Lichess page console:</p>
+            <div class="code-block">
+// Start move tracking
+window.chessmetrics.startMoveTracking()
+
+// Navigate through moves - analysis happens automatically!
+// Use arrows, click moves, use navigation buttons
+
+// Stop when done
+window.chessmetrics.stopMoveTracking()
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Manual Controls</h3>
+            <p>Or use these buttons to control the userscript on the Lichess page:</p>
+            <button id="startTracking">Start Move Tracking</button>
+            <button id="stopTracking" disabled>Stop Move Tracking</button>
+            <button id="checkStatus">Check Status</button>
+            <div id="trackingStatus" class="status info">Click "Check Status" to see if Chessmetrics is loaded on Lichess</div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Test Commands</h3>
+            <p>Copy these commands to test on the Lichess page:</p>
+            <div class="code-block">
+// Detect current board
+window.chessmetrics.detectBoard()
+
+// Analyze current position
+const board = window.chessmetrics.detectBoard()
+if (board.includes('FEN:')) {
+  const fen = board.match(/FEN: ([^\s]+)/)[1]
+  window.chessmetrics.standard.fen(fen)
+}
+
+// Debug page info
+window.chessmetrics.debugPage()
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎮 Navigation Test</h3>
+            <p>Once tracking is started, try these on the Lichess page:</p>
+            <ul>
+                <li><strong>Keyboard:</strong> Arrow keys (← → ↑ ↓), Space, j/k, Home/End</li>
+                <li><strong>Mouse:</strong> Click on moves in the move list</li>
+                <li><strong>UI Buttons:</strong> << < > >> navigation buttons</li>
+                <li><strong>Replay:</strong> Use the replay/autoplay feature</li>
+            </ul>
+            <p>Watch the console for automatic position analysis!</p>
+        </div>
+    </div>
+
+    <script>
+        // Test functions
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('trackingStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        // Event listeners
+        document.getElementById('startTracking').addEventListener('click', () => {
+            // Try to access the Lichess tab
+            const command = 'window.chessmetrics.startMoveTracking()';
+            navigator.clipboard.writeText(command).then(() => {
+                updateStatus('Command copied! Paste it in the Lichess page console.', 'success');
+            }).catch(() => {
+                updateStatus('Copy this command to the Lichess console: ' + command, 'info');
+            });
+        });
+
+        document.getElementById('stopTracking').addEventListener('click', () => {
+            const command = 'window.chessmetrics.stopMoveTracking()';
+            navigator.clipboard.writeText(command).then(() => {
+                updateStatus('Command copied! Paste it in the Lichess page console.', 'success');
+            }).catch(() => {
+                updateStatus('Copy this command to the Lichess console: ' + command, 'info');
+            });
+        });
+
+        document.getElementById('checkStatus').addEventListener('click', () => {
+            const command = 'window.chessmetrics.isMoveTrackingActive()';
+            navigator.clipboard.writeText(command).then(() => {
+                updateStatus('Status check command copied! Paste it in the Lichess page console.', 'success');
+            }).catch(() => {
+                updateStatus('Copy this command to the Lichess console: ' + command, 'info');
+            });
+        });
+
+        // Initial status
+        updateStatus('Ready to test! First install the Chessmetrics userscript via Tampermonkey, then go to a Lichess page.', 'info');
+    </script>
+</body>
+</html>
