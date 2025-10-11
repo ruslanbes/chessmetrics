@@ -22,7 +22,7 @@ export class AttackAnalyzer {
       // Create a temporary chess instance
       const fenParts = currentFen.split(' ')
       fenParts[1] = attackingTurn // Set turn to attacking player
-      fenParts[3] = '-' // Clear en-passant square to avoid illegal positions.
+      fenParts[3] = '-' // Clear en-passant square to avoid illegal positions
       const tempFen = fenParts.join(' ')
       const tempChess = new (this.board['chess'].constructor as any)(tempFen)
       
