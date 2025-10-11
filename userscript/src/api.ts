@@ -239,16 +239,16 @@ export class ChessMetricsAPI {
         console.log(`  - Turn: ${analysis.players.white.isMyTurn ? 'White' : 'Black'}`)
         
         // Log piece metrics
-        const hangingPieces = analysis.pieces.filter(p => p.isHanging).length
+        const hangingPieces = analysis.pieces.filter(p => (p as any).isHanging).length
         const totalPieces = analysis.pieces.length
-        const averageFreedom = analysis.pieces.reduce((sum, p) => sum + p.freedom, 0) / totalPieces
+        const averageFreedom = analysis.pieces.reduce((sum, p) => sum + ((p as any).freedom || 0), 0) / totalPieces
         console.log(`  - Total Pieces: ${totalPieces}`)
         console.log(`  - Hanging Pieces: ${hangingPieces}`)
         console.log(`  - Average Freedom: ${averageFreedom.toFixed(2)}`)
         
         // Log square metrics
         const totalSquares = analysis.squares.length
-        const attackedSquares = analysis.squares.filter(s => s.numberOfWhiteAttackers > 0 || s.numberOfBlackAttackers > 0).length
+        const attackedSquares = analysis.squares.filter(s => (s as any).numberOfWhiteAttackers > 0 || (s as any).numberOfBlackAttackers > 0).length
         console.log(`  - Attacked Squares: ${attackedSquares}/${totalSquares}`)
       }
       

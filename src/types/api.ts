@@ -27,17 +27,15 @@ export interface PieceMetrics {
   color: Color
   square: Square
   
-  // Calculated metrics
-  isAttacked: boolean
-  isHanging: boolean
-  numberOfAttackers: number
-  freedom: number
+  // Calculated metrics are auto-discovered and added dynamically
+  // See MetricRegistry.ts for available metrics
 }
 
 export interface SquareMetrics {
   square: Square
-  numberOfWhiteAttackers: number
-  numberOfBlackAttackers: number
+  
+  // Calculated metrics are auto-discovered and added dynamically
+  // See MetricRegistry.ts for available metrics
 }
 
 // Error types
