@@ -344,28 +344,6 @@ app.use('/api/v1/chess', [
 ])
 ```
 
-## Consequences
-
-### Positive:
-- **Clean URLs**: Simple, intuitive endpoint structure
-- **Format Clarity**: Clear distinction between input formats
-- **Extensibility**: Easy to add new input formats
-- **Variant Support**: Flexible variant handling
-- **Client Integration**: Easy for chess websites to use
-- **RESTful**: Standard HTTP conventions
-
-### Negative:
-- **Code Duplication**: Similar logic for different formats
-- **Parameter Handling**: Variants via query parameters
-- **Documentation**: Multiple endpoints to maintain
-- **Testing**: More test cases required
-
-### Risks:
-- **Breaking Changes**: API versioning complexity
-- **Performance**: Multiple validation layers
-- **Security**: More attack surface
-- **Maintenance**: More code to maintain
-
 ## Implementation Notes:
 
 ### URL Encoding:

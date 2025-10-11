@@ -178,39 +178,6 @@ npm run build:userscript
 - ✅ **Caching** - Browser can cache chess.js across sites
 - ✅ **Fallback support** - Can implement dynamic loading if needed
 
-## Consequences
-
-### Positive
-
-- **Rapid Development**: Quick iteration and testing
-- **Code Reuse**: Shared logic between API and userscript
-- **Single File Distribution**: Easy installation and management
-- **Browser Compatibility**: Works with all major userscript managers
-- **Performance**: Minified and optimized code
-- **Maintainability**: Clear separation of concerns
-
-### Negative
-
-- **Build Complexity**: Need to manage code copying and syncing
-- **Bundle Size**: Includes all shared code in userscript
-- **Potential Sync Issues**: Risk of copied code getting out of sync
-- **External Dependency**: Relies on CDN for chess.js
-- **Development Overhead**: Need to rebuild userscript for changes
-
-### Risks
-
-- **Code Drift**: Shared code could become inconsistent
-- **CDN Failure**: chess.js CDN could become unavailable
-- **Build Failures**: Webpack configuration could break
-- **Version Mismatches**: chess.js version conflicts
-
-### Mitigations
-
-- **Automated Testing**: Test both main app and userscript
-- **Build Validation**: Verify userscript builds successfully
-- **CDN Fallback**: Implement dynamic loading if CDN fails
-- **Version Pinning**: Pin exact chess.js version
-- **Documentation**: Clear build and development instructions
 
 ## Implementation Status
 

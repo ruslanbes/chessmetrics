@@ -21,9 +21,9 @@ We will use **chess.js** as the core chess library.
 
 ### Pros:
 - ✅ **Mature and Stable**: Well-established library with 7+ years of development
-- ✅ **Excellent API**: Clean, intuitive API for board manipulation and analysis
+- ✅ **Excellent API**: Clean API for board manipulation and analysis
 - ✅ **FEN Support**: Built-in FEN parsing and validation
-- ✅ **Move Generation**: Comprehensive legal move generation
+- ✅ **Move Generation**: Legal move generation
 - ✅ **Board Analysis**: Built-in methods for piece positions, attacks, and board state
 - ✅ **TypeScript Support**: Good TypeScript definitions available
 - ✅ **Browser Compatible**: Works in both Node.js and browser environments
@@ -41,26 +41,6 @@ We will use **chess.js** as the core chess library.
 - **stockfish.js**: More powerful but much heavier (~2MB), overkill for our needs
 - **Custom Implementation**: More control but significant development time
 - **python-chess (via WASM)**: More features but complex integration and larger bundle
-
-## Consequences
-
-### Positive:
-- Rapid development with proven, stable library
-- Easy integration with our TypeScript/Node.js stack
-- Good performance for our expected traffic (100 req/sec)
-- Excellent foundation for building custom metrics
-- Browser compatibility for future userscript development
-- Simple API makes it easy for contributors to add new metrics
-
-### Negative:
-- Limited to basic chess operations (no advanced engine features)
-- May need performance optimization for very complex metric calculations
-- Some advanced chess analysis may need custom implementation
-
-### Risks:
-- Performance bottlenecks for very complex metric calculations
-- May need to supplement with custom analysis for advanced metrics
-- Library updates could potentially break existing code
 
 ## Implementation Notes:
 - Install chess.js via npm: `npm install chess.js`

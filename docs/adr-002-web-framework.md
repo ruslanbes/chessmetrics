@@ -18,13 +18,12 @@ We will use **Node.js + Express.js** as the web framework.
 ## Rationale
 
 ### Pros:
-- **Excellent Static File Serving**: Express has built-in `express.static()` middleware perfect for serving cached FEN responses
+- **Static File Serving**: Express has built-in `express.static()` middleware perfect for serving cached FEN responses
 - **Simple Middleware Architecture**: Easy to implement caching, version checking, and metric auto-discovery
-- **Mature Ecosystem**: Large community, extensive documentation, and proven in production
+- **Mature Ecosystem**: Large community, extensive documentation, proven in production
 - **Lightweight and Fast**: Minimal overhead, good performance for API endpoints
 - **Flexible Routing**: Easy to implement RESTful endpoints and custom middleware
-- **JSON Handling**: Built-in JSON parsing and response formatting
-- **Error Handling**: Robust error handling middleware and patterns
+- **JSON Handling**: Built-in JSON parsing
 - **Development Tools**: Excellent debugging and development tooling
 
 ### Cons:
@@ -36,26 +35,6 @@ We will use **Node.js + Express.js** as the web framework.
 - **Node.js + Fastify**: Higher performance but smaller ecosystem and community
 - **Deno**: Modern runtime but less mature ecosystem and limited chess library compatibility
 - **Rust + Axum**: Better performance but higher complexity and learning curve
-
-## Consequences
-
-### Positive:
-- Rapid development and deployment
-- Easy integration with chess.js and other JavaScript libraries
-- Simple static file serving for cached responses
-- Excellent middleware ecosystem for caching and versioning
-- Easy to implement auto-discovery patterns
-- Great developer experience with hot reloading and debugging
-
-### Negative:
-- Performance limitations for very high traffic (beyond 100 req/sec)
-- Single-threaded nature may require worker threads for complex calculations
-- Memory overhead compared to compiled alternatives
-
-### Risks:
-- May need optimization for high-traffic scenarios
-- Single point of failure if not properly configured
-- Need to implement proper error handling and logging
 
 ## Implementation Notes:
 - Use Express.js with TypeScript for type safety

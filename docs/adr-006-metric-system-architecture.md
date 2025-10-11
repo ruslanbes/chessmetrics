@@ -223,27 +223,6 @@ class ResponseSerializer {
 }
 ```
 
-## Consequences
-
-### Positive:
-- **Natural Chess Modeling**: Mirrors real chess relationships
-- **Efficient Calculations**: Direct object references
-- **Clean API**: Simple JSON responses
-- **Extensible**: Easy to add new metrics
-- **Type Safe**: Full TypeScript support
-
-### Negative:
-- **Memory Usage**: Full object graph uses more memory
-- **Serialization Complexity**: Custom serialization required
-- **Debugging**: Circular references can complicate debugging
-- **Cache Complexity**: Special handling needed for caching
-
-### Risks:
-- **Memory Leaks**: Improper cleanup of circular references
-- **Serialization Errors**: JSON.stringify() will fail
-- **Performance**: Large object graphs may impact performance
-- **Cache Invalidation**: Complex cache invalidation logic
-
 ## Implementation Notes:
 
 ### Memory Management (MVP):

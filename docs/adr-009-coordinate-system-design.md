@@ -71,30 +71,6 @@ type Square = string | SquareCoordinates
 - ❌ **API Inconsistency**: Mixed response formats
 
 
-## Consequences
-
-### Positive:
-- **chess.js Compatibility**: Seamless integration with chess.js library
-- **API Stability**: No breaking changes to existing clients
-- **Performance**: Lightweight strings with efficient coordinate access
-- **Type Safety**: Compile-time validation of valid squares
-- **Code Clarity**: Multiple access patterns for different use cases
-- **Maintainability**: Centralized coordinate logic in SquareUtils
-- **Extensibility**: Easy to add new geometric analysis methods
-
-### Negative:
-- **Type Duplication**: Both SquareCoordinates interface and direct properties exist
-- **Learning Curve**: Developers need to understand multiple access patterns
-- **Design Inconsistency**: SquareCoordinates interface exists but isn't used in Piece
-- **Memory Overhead**: Pieces store both string and coordinate data
-
-### Risks:
-- **Inconsistency**: Developers might use different patterns inconsistently
-- **Performance**: Coordinate calculations on every piece creation
-- **Maintenance**: Need to keep multiple representations in sync
-- **API Evolution**: Future changes might require breaking changes
-- **Design Confusion**: SquareCoordinates interface exists but isn't used consistently
-
 ## Implementation Notes:
 
 ### Migration Strategy:
