@@ -1,5 +1,5 @@
 import { MetricCalculator } from './calculator'
-import { ChessBoard } from '../chess/board'
+import { ChessBoard } from '../chess/ChessBoard'
 import { CHESS_POSITIONS, ENDINGS } from '../../../tests/fixtures/chess-positions'
 
 describe('MetricCalculator', () => {

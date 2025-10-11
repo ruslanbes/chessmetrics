@@ -1,4 +1,4 @@
-import { ChessBoard } from './board'
+import { ChessBoard } from './ChessBoard'
 import { CHESS_POSITIONS, ENDINGS } from '../../../tests/fixtures/chess-positions'
 
 describe('ChessBoard', () => {

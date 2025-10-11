@@ -1,4 +1,4 @@
-import { ChessBoard } from '../../../core/chess/board'
+import { ChessBoard } from '../../../core/chess/ChessBoard'
 import { Color } from '../../../types/chess'
 import { FreedomMetric } from '../../piece/freedom/freedom'
 

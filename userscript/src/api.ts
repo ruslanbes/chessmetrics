@@ -1,5 +1,5 @@
 import { ChessMetricsResponse } from './types'
-import { ChessBoard } from './shared/core/chess/board'
+import { ChessBoard } from './shared/core/chess/ChessBoard'
 import { MetricCalculator } from './shared/core/metric/calculator'
 import { Chess } from 'chess.js'
 import { LichessIntegration } from './sites/lichess'

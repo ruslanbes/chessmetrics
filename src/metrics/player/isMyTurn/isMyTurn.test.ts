@@ -1,5 +1,5 @@
 import { IsMyTurnMetric } from './isMyTurn'
-import { ChessBoard } from '../../../core/chess/board'
+import { ChessBoard } from '../../../core/chess/ChessBoard'
 import { CHESS_POSITIONS, ENDINGS } from '../../../../tests/fixtures/chess-positions'
 
 describe('IsMyTurnMetric', () => {

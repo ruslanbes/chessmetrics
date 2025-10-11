@@ -1,4 +1,4 @@
-import { ChessBoard } from '../../../core/chess/board'
+import { ChessBoard } from '../../../core/chess/ChessBoard'
 import { Piece } from '../../../types/chess'
 import { NumberOfBlackAttackersMetric } from '../../square/numberOfBlackAttackers/numberOfBlackAttackers'
 import { NumberOfWhiteAttackersMetric } from '../../square/numberOfWhiteAttackers/numberOfWhiteAttackers'

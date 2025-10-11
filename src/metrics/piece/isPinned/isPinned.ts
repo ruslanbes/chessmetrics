@@ -1,4 +1,4 @@
-import { ChessBoard } from '../../../core/chess/board'
+import { ChessBoard } from '../../../core/chess/ChessBoard'
 import { Piece, SquareUtils } from '../../../types/chess'
 
 export interface PieceMetricContext {

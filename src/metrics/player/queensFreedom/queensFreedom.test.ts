@@ -1,5 +1,5 @@
 import { QueensFreedomMetric } from './queensFreedom'
-import { ChessBoard } from '../../../core/chess/board'
+import { ChessBoard } from '../../../core/chess/ChessBoard'
 import { CHESS_POSITIONS } from '../../../../tests/fixtures/chess-positions'
 
 describe('QueensFreedomMetric', () => {
