@@ -1,17 +1,26 @@
 import { Chess } from 'chess.js'
-import { Color, Piece, Move, PieceType, Square, SquareUtils } from '../../types/chess'
+import { Color, Piece, Move, Square } from '../../types/chess'
 import { AttackAnalyzer } from './AttackAnalyzer'
 import { BoardDebugger } from './BoardDebugger'
 import { GeometricAnalyzer } from './GeometricAnalyzer'
+import { BoardStateManager } from './BoardStateManager'
+import { PieceManager } from './PieceManager'
+import { MoveManager } from './MoveManager'
 
 export class ChessBoard {
   public chess: Chess
+  private stateManager: BoardStateManager
+  private pieceManager: PieceManager
+  private moveManager: MoveManager
   private attackAnalyzer: AttackAnalyzer
   private geometricAnalyzer: GeometricAnalyzer
   private debugger: BoardDebugger
 
   constructor(fen: string) {
     this.chess = new Chess(fen)
+    this.stateManager = new BoardStateManager(this.chess)
+    this.pieceManager = new PieceManager(this.chess)
+    this.moveManager = new MoveManager(this.chess)
     this.attackAnalyzer = new AttackAnalyzer(this)
     this.geometricAnalyzer = new GeometricAnalyzer()
     this.debugger = new BoardDebugger(this)
@@ -21,92 +30,35 @@ export class ChessBoard {
    * Get the current turn (whose move it is)
    */
   getTurn(): Color {
-    return this.chess.turn() === 'w' ? 'white' : 'black'
+    return this.stateManager.getTurn()
   }
 
   /**
    * Get the current FEN string
    */
   getFen(): string {
-    return this.chess.fen()
+    return this.stateManager.getFen()
   }
 
   /**
    * Get all pieces on the board
    */
   getPieces(): Piece[] {
-    const pieces: Piece[] = []
-    const board = this.chess.board()
-
-    for (let rank = 0; rank < 8; rank++) {
-      for (let file = 0; file < 8; file++) {
-        const square = board[rank]?.[file]
-        if (square) {
-          const squareName = this.getSquareName(rank, file)
-          const coordinates = SquareUtils.toCoordinates(squareName)
-          pieces.push({
-            type: this.mapPieceType(square.type),
-            color: square.color === 'w' ? 'white' : 'black',
-            square: squareName,
-            file: coordinates.file,
-            rank: coordinates.rank
-          })
-        }
-      }
-    }
-
-    return pieces
+    return this.pieceManager.getPieces()
   }
 
   /**
    * Get all legal moves
    */
   getMoves(): Move[] {
-    return this.chess.moves({ verbose: true }).map(move => ({
-      from: move.from,
-      to: move.to,
-      piece: this.mapPieceType(move.piece),
-      color: move.color === 'w' ? 'white' : 'black',
-      promotion: move.promotion ? this.mapPieceType(move.promotion) : undefined,
-      san: move.san,
-      lan: move.lan
-    }))
+    return this.moveManager.getMoves()
   }
 
   /**
    * Get all possible moves for both colors (for attack analysis)
    */
   getAllMoves(): Move[] {
-    const currentFen = this.chess.fen()
-    const allMoves: Move[] = []
-
-    // Get moves for current turn
-    allMoves.push(...this.getMoves())
-
-    // Get moves for opposite turn by temporarily switching
-    const oppositeTurn = this.chess.turn() === 'w' ? 'b' : 'w'
-    const fenParts = currentFen.split(' ')
-    fenParts[1] = oppositeTurn // Change the turn indicator
-    const oppositeFen = fenParts.join(' ')
-    
-    try {
-      const oppositeChess = new (this.chess.constructor as any)(oppositeFen)
-      const oppositeMoves = oppositeChess.moves({ verbose: true }).map((move: any) => ({
-        from: move.from,
-        to: move.to,
-        piece: this.mapPieceType(move.piece),
-        color: move.color === 'w' ? 'white' : 'black',
-        promotion: move.promotion ? this.mapPieceType(move.promotion) : undefined,
-        san: move.san,
-        lan: move.lan
-      }))
-      allMoves.push(...oppositeMoves)
-    } catch (error) {
-      // If switching turns fails, just return current moves
-      console.warn('Failed to get moves for opposite turn:', error)
-    }
-
-    return allMoves
+    return this.moveManager.getAllMoves()
   }
 
   /**
@@ -121,34 +73,21 @@ export class ChessBoard {
    * Check if the position is valid
    */
   isValid(): boolean {
-    try {
-      return this.chess.isGameOver() === false || this.chess.isCheckmate() || this.chess.isStalemate()
-    } catch {
-      return false
-    }
-  }
-
-  /**
-   * Convert rank/file to square name (e.g., 0,0 -> "a8")
-   */
-  private getSquareName(rank: number, file: number): Square {
-    const fileChar = String.fromCharCode(97 + file) // 'a' to 'h'
-    const rankNum = 8 - rank // 8 to 1
-    return `${fileChar}${rankNum}` as Square
+    return this.stateManager.isValid()
   }
 
   /**
    * Get ASCII representation of the board (delegates to chess.js)
    */
   getAscii(): string {
-    return this.chess.ascii()
+    return this.stateManager.getAscii()
   }
 
   /**
    * Get 2D array representation of the board (delegates to chess.js)
    */
   getBoardArray(): any[][] {
-    return this.chess.board()
+    return this.stateManager.getBoardArray()
   }
 
   /**
@@ -183,17 +122,7 @@ export class ChessBoard {
    * Get piece at a specific square (delegates to chess.js)
    */
   getPieceAt(square: Square): Piece | null {
-    const piece = this.chess.get(square)
-    if (!piece) return null
-    
-    const coordinates = SquareUtils.toCoordinates(square)
-    return {
-      type: this.mapPieceType(piece.type),
-      color: piece.color === 'w' ? 'white' : 'black',
-      square: square,
-      file: coordinates.file,
-      rank: coordinates.rank
-    }
+    return this.pieceManager.getPieceAt(square)
   }
 
   /**
@@ -217,18 +146,4 @@ export class ChessBoard {
     return this.debugger.debugAttacks(square)
   }
 
-  /**
-   * Map chess.js piece type to our PieceType
-   */
-  private mapPieceType(chessType: string): PieceType {
-    const typeMap: Record<string, PieceType> = {
-      'p': 'pawn',
-      'r': 'rook',
-      'n': 'knight',
-      'b': 'bishop',
-      'q': 'queen',
-      'k': 'king'
-    }
-    return typeMap[chessType] || 'pawn' // fallback to pawn
-  }
 }
