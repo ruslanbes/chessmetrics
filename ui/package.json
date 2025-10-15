@@ -1,0 +1,26 @@
+{
+  "name": "chessmetrics-ui",
+  "version": "1.0.0",
+  "description": "Chessmetrics browser UI components (overlays, visualizers, site adapters)",
+  "main": "dist/index.js",
+  "scripts": {
+    "copy-engine": "node build/copy-engine.js",
+    "build": "npm run copy-engine && tsc",
+    "build-only": "tsc",
+    "test": "echo \"UI tests not implemented yet\"",
+    "clean": "rm -rf dist engine"
+  },
+  "keywords": [
+    "chess",
+    "ui",
+    "overlay",
+    "visualization",
+    "browser"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "fs-extra": "^11.3.2"
+  }
+}

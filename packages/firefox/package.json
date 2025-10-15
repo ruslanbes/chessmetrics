@@ -4,9 +4,8 @@
   "description": "Chessmetrics Firefox extension for Lichess and Chess.com",
   "private": true,
   "scripts": {
-    "copy-shared": "node build/copy-shared.js",
-    "build": "npm run copy-shared && webpack --config build/webpack.config.js",
-    "watch": "npm run copy-shared && webpack --config build/webpack.config.js --watch",
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.config.js --watch",
     "package": "cd dist && zip -r ../chessmetrics-firefox.zip . && echo 'Package created: chessmetrics-firefox.zip'"
   }
 }

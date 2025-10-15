@@ -14,11 +14,14 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "allowJs": true
+    "baseUrl": "./",
+    "paths": {
+      "@engine/*": ["engine/*"]
+    }
   },
   "include": [
     "src/**/*",
-    "ui/**/*"
+    "engine/**/*"
   ],
   "exclude": [
     "node_modules",

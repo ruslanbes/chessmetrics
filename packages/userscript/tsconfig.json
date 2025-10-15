@@ -13,11 +13,12 @@
     "sourceMap": false,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true
   },
   "include": [
     "src/**/*",
-    "shared/**/*"
+    "ui/**/*"
   ],
   "exclude": [
     "node_modules",

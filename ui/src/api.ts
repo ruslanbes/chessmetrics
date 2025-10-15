@@ -1,6 +1,6 @@
 import { ChessMetricsResponse } from './types'
-import { ChessBoard } from '../shared/core/chess/ChessBoard'
-import { MetricCalculator } from '../shared/core/metric/MetricCalculator'
+import { ChessBoard } from '@engine/core/chess/ChessBoard'
+import { MetricCalculator } from '@engine/core/metric/MetricCalculator'
 import { Chess } from 'chess.js'
 import { LichessIntegration } from './sites/lichess'
 import { MoveTracker } from './sites/lichess/move-tracker'

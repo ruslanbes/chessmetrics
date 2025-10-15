@@ -1,4 +1,4 @@
-import { ChessMetricsAPI } from './api'
+import { ChessMetricsAPI } from '../ui/src/api'
 
 // Initialize the global chessmetrics object
 declare global {

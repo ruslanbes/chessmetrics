@@ -11,7 +11,11 @@ build/
 # Package build outputs
 packages/*/dist/
 packages/*/node_modules/
-packages/*/shared/
+packages/*/ui/
+
+# UI build outputs
+ui/dist/
+ui/engine/
 
 # Environment variables
 .env

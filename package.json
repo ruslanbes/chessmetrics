@@ -12,9 +12,15 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     
-    "build:chrome": "cd packages/chrome && npm run build",
-    "build:firefox": "cd packages/firefox && npm run build",
-    "build:userscript": "cd packages/userscript && npm run build",
+    "build:ui": "cd ui && npm run build",
+    "build:ui-only": "cd ui && npm run build-only",
+    "copy:chrome": "mkdir -p packages/chrome/ui && cp -r ui/dist/* packages/chrome/ui/",
+    "copy:firefox": "mkdir -p packages/firefox/ui && cp -r ui/dist/* packages/firefox/ui/",
+    "copy:userscript": "mkdir -p packages/userscript/ui && cp -r ui/dist/* packages/userscript/ui/",
+    
+    "build:chrome": "npm run build:ui && npm run copy:chrome && cd packages/chrome && npm run build",
+    "build:firefox": "npm run build:ui && npm run copy:firefox && cd packages/firefox && npm run build",
+    "build:userscript": "npm run build:ui && npm run copy:userscript && cd packages/userscript && npm run build",
     "build:all-packages": "npm run build:chrome && npm run build:firefox && npm run build:userscript",
     
     "watch:chrome": "cd packages/chrome && npm run watch",
@@ -32,7 +38,7 @@
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --watchAll=false",
     "lint": "echo \"Linting not configured yet\"",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist ui/dist ui/engine packages/*/ui packages/*/engine",
     "release": "npm run build && npm run build:all-packages && npm run package:all"
   },
   "keywords": [

@@ -10,7 +10,7 @@
 // chess.js is now bundled directly - no external dependency needed
 // ==/UserScript==
 
-import { ChessMetricsAPI } from './api'
+import { ChessMetricsAPI } from '../ui/src/api'
 
 // Initialize the global chessmetrics object
 declare global {
